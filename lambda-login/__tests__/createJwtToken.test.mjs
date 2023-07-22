@@ -13,7 +13,7 @@ const validData = {
     jwtSecret: testsecret
 }
 
-describe('createJwtToken', () => {
+describe('util function createJwtToken', () => {
     it('should return a valid JWT', () => {
         const token = createJwtToken(validData);
         expect(token).toEqual(expect.any(String));

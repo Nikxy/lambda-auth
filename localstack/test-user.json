@@ -1,0 +1,6 @@
+{
+    "Id": {"S":"6ab997ce-400a-49a5-8b35-4cde68ecd71b"},
+    "Type": {"S":"User"},
+    "Username": {"S":"orders"},
+    "Password": {"S":"$2a$10$GqZhMEPIbQ7bprn8D1DfO.oHSOgSSbnqq5bWckKkV3tJOY7LIZnN."}
+}

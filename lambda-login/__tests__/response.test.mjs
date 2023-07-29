@@ -15,38 +15,38 @@ describe("util class response", () => {
       expect(res.body).toEqual(testData);
     });
   });
-  describe("generateOK", () => {
+  describe("OK", () => {
     it("should respond ok without data", async () => {
-      const res = response.generateOK();
+      const res = response.OK();
       expect(res.statusCode).toBe(200);
       expect(res.body).toBeNull();
     });
     it("should respond ok with data", async () => {
-      const res = response.generateOK(testData);
+      const res = response.OK(testData);
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual(testData);
     });
   });
-  describe("generateBadRequest", () => {
+  describe("BadRequest", () => {
     it("should respond 400 without data", async () => {
-      const res = response.generateBadRequest();
+      const res = response.BadRequest();
       expect(res.statusCode).toBe(400);
       expect(res.body).toBeNull();
     });
     it("should respond 400 with data", async () => {
-      const res = response.generateBadRequest(errorData.error);
+      const res = response.BadRequest(errorData.error);
       expect(res.statusCode).toBe(400);
       expect(res.body).toEqual(errorData);
     });
   });
-  describe("generateServerError", () => {
+  describe("ServerError", () => {
     it("should respond 500 without data", async () => {
-        const res = response.generateServerError();
+        const res = response.ServerError();
         expect(res.statusCode).toBe(500);
         expect(res.body).toBeNull();
       });
     it("should respond 500 with data", async () => {
-      const res = response.generateServerError("test");
+      const res = response.ServerError("test");
       expect(res.statusCode).toBe(500);
       expect(res.body).toEqual({ error: "test" });
     });

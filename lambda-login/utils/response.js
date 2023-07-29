@@ -1,9 +1,9 @@
 class Response {
-  generateOK = (body = null) =>
-    this.generate(200, body == null ? null : body);
-  generateBadRequest = (msg = null) =>
+  OK = (body = null) =>
+    this.generate(200, body);
+  BadRequest = (msg = null) =>
     this.generate(400, msg ? { error: msg } : null);
-  generateServerError = (msg = null) =>
+  ServerError = (msg = null) =>
     this.generate(500, msg ? { error: msg } : null);
 
   generate(statusCode, body) {

@@ -3,9 +3,10 @@ import {
   GetSecretValueCommand,
 } from "@aws-sdk/client-secrets-manager";
 
-const clientSecrets = new SecretsManagerClient({
-  region: "eu-central-1",
-});
+const config = { region: "eu-central-1" };
+if (process.env.SECRETS_ENDPOINT) config.endpoint = process.env.SECRETS_ENDPOINT;
+
+const clientSecrets = new SecretsManagerClient(config);
 
 async function getSecret(secret_name) {
   let response;

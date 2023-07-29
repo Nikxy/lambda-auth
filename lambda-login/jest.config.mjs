@@ -4,5 +4,6 @@ export default async () => {
     verbose: true,
     testEnvironment: "node",
     testMatch: ["**/*.test.mjs"],
+    setupFiles: ["<rootDir>/__tests__/jest.setup.mjs"],
   };
 };

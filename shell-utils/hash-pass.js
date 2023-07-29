@@ -5,4 +5,7 @@ if(process.argv.length < 3) {
     process.exit(1);
 }
 const password = process.argv.slice(2)[0];
-console.log(bcrypt.hashSync(password, 10));
+const hash = bcrypt.hashSync(password, 10);
+
+console.log(hash);
+console.log(bcrypt.compareSync(password, hash));

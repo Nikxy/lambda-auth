@@ -1,5 +1,5 @@
 {
-  "body": "{\"domain\": \"orders.nikxy.dev\",\"username\": \"orders\",\"password\": \"0SdoPPhVztwbuSt2lTgv\"}",
+  "body": "{\"domain\": \"orders\",\"username\": \"orders\",\"password\": \"0SdoPPhVztwbuSt2lTgv\"}",
   "resource": "/{proxy+}",
   "path": "/path/to/resource",
   "httpMethod": "POST",

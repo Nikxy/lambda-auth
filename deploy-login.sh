@@ -9,7 +9,7 @@ then
 fi
 echo 'Creating zip archive...'
 cd $LAMBDA_NAME
-zip -r $LAMBDA_NAME.zip * -x *.test.mjs jest.config.mjs &> /dev/null
+zip -r $LAMBDA_NAME.zip * -x /__tests__ jest.config.mjs &> /dev/null
 echo 'Uploading...'
 aws lambda --function-name update-function-code nikxy-auth-login --zip-file fileb://$LAMBDA_NAME.zip  &> ../$LOG_FILE
 echo 'Removing zip archive...'

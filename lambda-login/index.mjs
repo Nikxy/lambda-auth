@@ -40,9 +40,7 @@ export const handler = async (event) => {
   }
   // Check if domain secret is set
   if (!jwtSecret[data.domain])
-    return response.ServerError(
-      "Can't get jwt secret for domain: " + data.domain
-    );
+    return response.BadRequest("Invalid Domain");
 
   // Get user from DynamoDB
   let results;

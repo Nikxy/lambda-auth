@@ -12,7 +12,6 @@ async function getSecret(secret_name) {
   let response;
 
   try {
-    console.log("Getting secret" + secret_name);
     response = await clientSecrets.send(
       new GetSecretValueCommand({
         SecretId: secret_name,

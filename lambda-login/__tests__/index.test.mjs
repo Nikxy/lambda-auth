@@ -36,7 +36,6 @@ describe('lambda-login', () => {
             }),
         };
         const response = await handler(event);
-        console.log(response);
         expect(response.statusCode).toBe(400);
     });
 });

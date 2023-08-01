@@ -1,5 +1,5 @@
 import response from "./utils/response.js";
-import AWS from "aws-sdk";
+import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
@@ -19,7 +19,7 @@ if (process.env.JWT_SECRET_KEY == undefined) {
 const dbConfig = { region: "eu-central-1" };
 // Set endpoint if provided
 if (process.env.DB_ENDPOINT) dbConfig.endpoint = process.env.DB_ENDPOINT;
-const docClient = new AWS.DynamoDB.DocumentClient(dbConfig);
+const docClient = new DynamoDB(dbConfig);
 
 // Create Lambda Handler
 export const handler = async (event) => {

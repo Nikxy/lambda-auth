@@ -18,7 +18,13 @@ if (process.env.JWT_SECRET_KEY == undefined) {
 // Configure AWS DynamoDB
 const dbConfig = { region: "eu-central-1" };
 // Set endpoint if provided
-if (process.env.DB_ENDPOINT) dbConfig.endpoint = process.env.DB_ENDPOINT;
+if (process.env.DB_ENDPOINT){
+  dbConfig.endpoint = process.env.DB_ENDPOINT;
+  dbConfig.credentials = {
+    accessKeyId: "fakeMyKeyId",
+    secretAccessKey: "fakeSecretAccessKey"
+  }
+}
 const docClient = new DynamoDB(dbConfig);
 
 // Create Lambda Handler

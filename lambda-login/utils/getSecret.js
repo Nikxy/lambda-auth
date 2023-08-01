@@ -4,7 +4,14 @@ import {
 } from "@aws-sdk/client-secrets-manager";
 
 const config = { region: "eu-central-1" };
-if (process.env.SECRETS_ENDPOINT) config.endpoint = process.env.SECRETS_ENDPOINT;
+
+if (process.env.SECRETS_ENDPOINT){
+  config.endpoint = process.env.SECRETS_ENDPOINT;
+  config.credentials = {
+    accessKeyId: "fakeMyKeyId",
+    secretAccessKey: "fakeSecretAccessKey"
+  }
+}
 
 const clientSecrets = new SecretsManagerClient(config);
 

@@ -27,7 +27,7 @@ describe('lambda-login', () => {
         const response = await handler(event);
         expect(response.statusCode).toBe(400);
     });
-    test('body should contain domain,username and password ', async () => {
+    test('invalid password', async () => {
         const event = {
             body: JSON.stringify({
                 domain: "test",
@@ -36,6 +36,7 @@ describe('lambda-login', () => {
             }),
         };
         const response = await handler(event);
+        console.log(response);
         expect(response.statusCode).toBe(400);
     });
 });

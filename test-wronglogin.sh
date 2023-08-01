@@ -1,0 +1,1 @@
+sam local invoke LoginFunction -e events/wrong-login.json --docker-network ssl-proxy

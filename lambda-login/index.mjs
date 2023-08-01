@@ -64,12 +64,12 @@ export const handler = async (event) => {
   }
   // Check if user exists
   if (results.Items.length < 1)
-    return response.BadRequest("Invalid username or password [1]");
+    return response.BadRequest("Invalid username or password");
 
   const user = results.Items[0];
   // Check if password is correct
   if (!bcrypt.compareSync(data.password, user.password))
-    return response.BadRequest("Invalid username or password [2]");
+    return response.BadRequest("Invalid username or password");
 
   // Generate refresh token
   const refreshToken = uuidv4();

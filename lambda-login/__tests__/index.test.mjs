@@ -1,4 +1,6 @@
+import {jest} from '@jest/globals'
 import { handler } from '../index.mjs';
+jest.useFakeTimers();
 
 describe('lambda-login', () => {
     test('body should be valid JSON', async () => {

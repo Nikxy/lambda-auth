@@ -1,5 +1,4 @@
 def PROJECT_FOLDER = 'lambda-login'
-def LOCALSTACK_ENDPOINT = 'http://localstack_main:4566'
 
 pipeline {
     agent any
@@ -30,9 +29,9 @@ pipeline {
         }
         stage('Unit & Integration Tests') {
             environment {
+                LOCAL_ENDPOINT = 'http://localstack_main:4566'
+
                 DB_TABLE = 'nikxy-auth'
-                DB_ENDPOINT = '${LOCALSTACK_ENDPOINT}'
-                SECRETS_ENDPOINT = '${LOCALSTACK_ENDPOINT}'
                 JWT_SECRET_KEY = 'nikxy/auth/jwtsecrets'
             }
             steps {

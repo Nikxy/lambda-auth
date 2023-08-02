@@ -7,15 +7,15 @@ const errorData = {
   error: "test",
 };
 
-describe("util class response", async () => {
-  describe("generate", async () => {
+describe("util class response", () => {
+  describe("generate", () => {
     it("should respond with specified status & data", async () => {
       const res = response.generate(200, testData);
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual(testData);
     });
   });
-  describe("OK", async () => {
+  describe("OK", () => {
     it("should respond ok without data", async () => {
       const res = response.OK();
       expect(res.statusCode).toBe(200);
@@ -27,7 +27,7 @@ describe("util class response", async () => {
       expect(res.body).toEqual(testData);
     });
   });
-  describe("BadRequest", async () => {
+  describe("BadRequest", () => {
     it("should respond 400 without data", async () => {
       const res = response.BadRequest();
       expect(res.statusCode).toBe(400);
@@ -39,7 +39,7 @@ describe("util class response", async () => {
       expect(res.body).toEqual(errorData);
     });
   });
-  describe("ServerError", async () => {
+  describe("ServerError", () => {
     it("should respond 500 without data", async () => {
         const res = response.ServerError();
         expect(res.statusCode).toBe(500);

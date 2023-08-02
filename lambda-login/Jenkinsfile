@@ -44,6 +44,7 @@ pipeline {
                             credentialsId: 'AWSJenkinsDeploy',
                             usernameVariable: 'accessKeyId',
                             passwordVariable: 'accessKeySecret')]) {
+                                sh 'echo $accessKeyId';
                         deployLambda([
                             alias: '',
                             artifactLocation: 'deploymentFile.zip',

@@ -3,7 +3,10 @@ def PROJECT_FOLDER = 'lambda-login'
 pipeline {
     agent any
     
-    tools { nodejs 'Node 18.x' }
+    tools {
+        nodejs 'Node 18.x'
+        'org.jenkinsci.plugins.docker.commons.tools.DockerTool' '18.09'
+    }
 
     environment {
         REGION = 'eu-central-1'

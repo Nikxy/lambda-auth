@@ -50,7 +50,7 @@ pipeline {
         stage('Install AWS Sam'){
             steps{
                 sh 'python3 -m venv venv && venv/bin/pip install aws-sam-cli'
-                sh 'sam --version'
+                sh 'venv/bin/sam sam --version'
                 stash includes: '**/venv/**/*', name: 'venv'
             }
         }

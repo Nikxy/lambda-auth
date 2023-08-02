@@ -39,7 +39,7 @@ pipeline {
             steps {
                 dir('lambda-login') {
                     
-                    sh 'zip -FSr deploymentFile.zip . -x ./jest.config.mjs ./__tests__/**\* ./__tests__/ ./node_modules/@aws-sdk/**\* ./node_modules/@aws-sdk/'
+                    sh 'zip -FSr deploymentFile.zip . -x ./jest.config.mjs ./__tests__/**\\* ./__tests__/ ./node_modules/@aws-sdk/**\\* ./node_modules/@aws-sdk/'
                     withCredentials([
                         usernamePassword(
                             credentialsId: 'AWSJenkinsDeploy',

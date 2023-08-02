@@ -36,7 +36,7 @@ pipeline {
             }*/
             steps {
                 dir(PROJECT_FOLDER) {
-                    sh 'npm test'
+                    sh 'npm run test_ci'
                 }
             }
         }

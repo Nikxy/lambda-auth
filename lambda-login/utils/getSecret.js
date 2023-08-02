@@ -3,15 +3,11 @@ import {
   GetSecretValueCommand,
 } from "@aws-sdk/client-secrets-manager";
 
+import checkLocal from "./checkLocal.js";
+
 const config = { region: "eu-central-1" };
 
-if (process.env.SECRETS_ENDPOINT){
-  config.endpoint = process.env.SECRETS_ENDPOINT;
-  config.credentials = {
-    accessKeyId: "fakeMyKeyId",
-    secretAccessKey: "fakeSecretAccessKey"
-  }
-}
+checkLocal(config);
 
 const clientSecrets = new SecretsManagerClient(config);
 

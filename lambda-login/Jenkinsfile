@@ -1,10 +1,10 @@
-/* groovylint-disable LineLength, NestedBlockDepth */
-/* groovylint-disable-next-line CompileStatic */
+def PROJECT_FOLDER = 'lambda-login'
+def LOCALSTACK_ENDPOINT = 'http://localstack_main:4566'
+def AWS_REGION = 'eu-central-1'
+
 pipeline {
     agent any
-    PROJECT_FOLDER = 'lambda-login'
-    LOCALSTACK_ENDPOINT = 'http://localstack_main:4566'
-    AWS_REGION = 'eu-central-1'
+    
     tools { nodejs 'Node 18.x' }
 
     stages {

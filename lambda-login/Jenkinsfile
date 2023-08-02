@@ -42,7 +42,7 @@ pipeline {
             post {
                 always {
                     dir(PROJECT_FOLDER) {
-                        junit 'output/coverage/junit/junit.xml'
+                        junit 'junit.xml'
                     }
                 }
             }

@@ -21,9 +21,5 @@
   "devDependencies": {
     "jest": "^29.6.1",
     "jest-junit": "^16.0.0"
-  },
-  "jest-junit": {
-    "output": "output/coverage/junit/junit.xml",
-    "usePathForSuiteName": "true"
   }
 }

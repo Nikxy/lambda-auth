@@ -37,26 +37,31 @@ pipeline {
         }
         stage('Deploy To AWS') {
             steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'AWSJenkinsDeploy',
-                        usernameVariable: 'accessKeyId',
-                        passwordVariable: 'accessKeySecret')]) {
-                    deployLambda([
-                        alias: '',
-                        artifactLocation: '',
-                        awsAccessKeyId: '$accessKeyId',
-                        awsRegion: 'eu-central-1',
-                        awsSecretKey: '{$accessKeySecret}',
-                        deadLetterQueueArn: '',
-                        description: '',
-                        environmentConfiguration: [kmsArn: ''],
-                        functionName: 'nikxy-auth-login',
-                        handler: '', memorySize: '',
-                        role: '', runtime: '',
-                        securityGroups: '', subnets: '', timeout: '',
-                        updateMode: 'code'
-                    ])
+                dir('lambda-login') {
+                    
+                    sh 'zip -FSr deploymentFile.zip . -x ./jest.config.mjs ./__tests__/**\* ./__tests__/ ./node_modules/@aws-sdk/**\* ./node_modules/@aws-sdk/'
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'AWSJenkinsDeploy',
+                            usernameVariable: 'accessKeyId',
+                            passwordVariable: 'accessKeySecret')]) {
+                        deployLambda([
+                            alias: '',
+                            artifactLocation: 'deploymentFile.zip',
+                            awsAccessKeyId: '$accessKeyId',
+                            awsRegion: 'eu-central-1',
+                            awsSecretKey: '{$accessKeySecret}',
+                            deadLetterQueueArn: '',
+                            description: '',
+                            environmentConfiguration: [kmsArn: ''],
+                            functionName: 'nikxy-auth-login',
+                            handler: '', memorySize: '',
+                            role: '', runtime: '',
+                            securityGroups: '', subnets: '', timeout: '',
+                            updateMode: 'code'
+                        ])
+                    }
+                    sh 'rm deploymentFile.zip'
                 }
             }
         }

@@ -1,9 +1,12 @@
-import { DynamoDB } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient  } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient, ScanCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+
 import response from "./utils/response.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import getSecret from "./utils/getSecret.js";
+import checkLocal from "./utils/checkLocal.js";
 
 // Check if all env variables are set
 if (process.env.DB_TABLE == undefined) {
@@ -14,18 +17,6 @@ if (process.env.JWT_SECRET_KEY == undefined) {
   console.error("env JWT_SECRET_KEY not set");
   process.exit(1);
 }
-
-// Configure AWS DynamoDB
-const dbConfig = { region: "eu-central-1" };
-// Set endpoint if provided
-if (process.env.DB_ENDPOINT){
-  dbConfig.endpoint = process.env.DB_ENDPOINT;
-  dbConfig.credentials = {
-    accessKeyId: "fakeMyKeyId",
-    secretAccessKey: "fakeSecretAccessKey"
-  }
-}
-const docClient = new DynamoDB(dbConfig);
 
 // Create Lambda Handler
 export const handler = async (event) => {
@@ -48,10 +39,11 @@ export const handler = async (event) => {
   if (!jwtSecret[data.domain])
     return response.BadRequest("Invalid Domain");
 
+  const docClient = initDB();
   // Get user from DynamoDB
   let results;
   try {
-    const params = {
+    const command = new ScanCommand({
       TableName: process.env.DB_TABLE,
 
       ExpressionAttributeValues: {
@@ -61,10 +53,11 @@ export const handler = async (event) => {
       },
       FilterExpression:
         "doc_type = :typeVal and username = :name and doc_domain = :domainVal",
-    };
-    results = await docClient.scan(params).promise();
+    });
+
+    results = await docClient.send(command);
   } catch (e) {
-    return response.ServerError(e.message);
+    return response.ServerError('db:'+e.message);
   }
   // Check if user exists
   if (results.Items.length < 1)
@@ -78,7 +71,7 @@ export const handler = async (event) => {
   // Generate refresh token
   const refreshToken = uuidv4();
   const dateNow = Date.now();
-  const params = {
+  const command = new PutCommand({
     TableName: process.env.DB_TABLE,
     Item: {
       id: refreshToken,
@@ -87,9 +80,9 @@ export const handler = async (event) => {
       created: dateNow,
       valid_until: dateNow + 604800, // 7 days
     },
-  };
+  });
   try {
-    await docClient.put(params).promise();
+    await docClient.send(command);
   } catch (e) {
     return response.ServerError("Can't put refresh token: " + e.message);
   }
@@ -106,7 +99,16 @@ export const handler = async (event) => {
   return response.OK({ token: token });
 };
 
-function initData(body) {
+function initDB(){
+  // Configure AWS DynamoDB
+  const dbConfig = { region: "eu-central-1" };
+  checkLocal(dbConfig);
+
+  const client = new DynamoDBClient(dbConfig);
+  return DynamoDBDocumentClient.from(client);
+}
+
+export const initData = (body) => {
   let data;
   try {
     data = JSON.parse(body);

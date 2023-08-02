@@ -48,9 +48,9 @@ pipeline {
                         deployLambda([
                             alias: '',
                             artifactLocation: 'deploymentFile.zip',
-                            awsAccessKeyId: credentials('accessKeyId'),
+                            awsAccessKeyId: accessKeyId,
                             awsRegion: 'eu-central-1',
-                            awsSecretKey: credentials('accessKeySecret'),
+                            awsSecretKey: accessKeySecret,
                             deadLetterQueueArn: '',
                             description: '',
                             environmentConfiguration: [kmsArn: ''],

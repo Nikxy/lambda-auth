@@ -1,11 +1,15 @@
-def PROJECT_FOLDER = 'lambda-login'
-def LOCALSTACK_ENDPOINT = 'http://localstack_main:4566'
-def AWS_REGION = 'eu-central-1'
+
 
 pipeline {
     agent any
     
     tools { nodejs 'Node 18.x' }
+
+    environment {
+        PROJECT_FOLDER = 'lambda-login'
+        LOCALSTACK_ENDPOINT = 'http://localstack_main:4566'
+        AWS_REGION = 'eu-central-1'
+    }
 
     stages {
         stage('Clone Source') {

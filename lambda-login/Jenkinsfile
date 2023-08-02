@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    tools {nodejs "Node 18.x"}
+
+    stages {
+        stage('Clone Source') {
+            steps {
+                git branch: 'master', url: 'https://c16adb70562dc0fcfb69f83802bafb4044b3ef4e@gogs.dev.callandorit.net/nikxy/lambda-auth.git'
+            }
+        }
+        stage('Install dependencies') {
+            /*when {
+                changeset "lambda-login/package.json"
+            }*/
+
+            steps {
+                dir('lambda-login') {
+                    sh 'npm install'
+                }
+            }
+        }
+        stage('Integration Tests'){
+            environment {
+                REGION= 'eu-central-1'
+                DB_TABLE = 'nikxy-auth'
+                DB_ENDPOINT= 'http://localstack_main:4566'
+                SECRETS_ENDPOINT= 'http://localstack_main:4566'
+                JWT_SECRET_KEY='nikxy/auth/jwtsecrets'
+            }
+            steps {
+                dir('lambda-login') {
+                    sh 'npm run clear_jest'
+                    sh 'npm test'
+                }
+            }
+        }
+    }
+}

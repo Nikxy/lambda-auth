@@ -9,9 +9,9 @@ then
 fi
 echo 'Creating zip archive...'
 cd $LAMBDA_NAME
-zip -r ../$LAMBDA_NAME.zip * &> /dev/null
+zip -r $LAMBDA_NAME.zip * &> /dev/null
 echo 'Uploading...'
-aws lambda --function-name update-function-code nikxy-auth-status --zip-file fileb://../$LAMBDA_NAME.zip  &> ../$LOG_FILE
+aws lambda --function-name update-function-code nikxy-auth-status --zip-file fileb://$LAMBDA_NAME.zip  &> ../$LOG_FILE
 echo 'Removing zip archive...'
-rm ../$LAMBDA_NAME.zip
+rm $LAMBDA_NAME.zip
 echo 'Done.'

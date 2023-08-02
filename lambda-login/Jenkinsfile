@@ -39,6 +39,13 @@ pipeline {
                     sh 'npm run test_ci'
                 }
             }
+            post {
+                always {
+                    dir(PROJECT_FOLDER) {
+                        junit 'output/coverage/junit/junit.xml'
+                    }
+                }
+            }
         }
         stage('Deploy To AWS') {
             steps {

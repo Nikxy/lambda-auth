@@ -30,7 +30,6 @@ pipeline {
             }
             steps {
                 dir('lambda-login') {
-                    sh 'npm run clear_jest'
                     sh 'npm test'
                 }
             }
@@ -50,7 +49,7 @@ pipeline {
                             artifactLocation: 'deploymentFile.zip',
                             awsAccessKeyId: '$accessKeyId',
                             awsRegion: 'eu-central-1',
-                            awsSecretKey: '{$accessKeySecret}',
+                            awsSecretKey: '$accessKeySecret',
                             deadLetterQueueArn: '',
                             description: '',
                             environmentConfiguration: [kmsArn: ''],

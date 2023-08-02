@@ -3,23 +3,25 @@ import { handler } from '../index.mjs';
 jest.useFakeTimers();
 
 describe('lambda-login', () => {
-    test('body should be valid JSON', async () => {
+    it('body should be valid JSON', async () => {
         const event = {
             body: "adsasd",
         };
         const response = await handler(event);
+        jest.runAllTimers()
         expect(response.statusCode).toBe(400);
     });
-    test('body should contain domain,username and password ', async () => {
+    it('body should contain domain,username and password ', async () => {
         const event = {
             body: JSON.stringify({
                 domain: "test",
             }),
         };
         const response = await handler(event);
+        jest.runAllTimers()
         expect(response.statusCode).toBe(400);
     });
-    test('body should contain domain,username and password ', async () => {
+    it('body should contain domain,username and password ', async () => {
         const event = {
             body: JSON.stringify({
                 domain: "test",
@@ -27,9 +29,10 @@ describe('lambda-login', () => {
             }),
         };
         const response = await handler(event);
+        jest.runAllTimers()
         expect(response.statusCode).toBe(400);
     });
-    test('invalid password', async () => {
+    it('invalid password', async () => {
         const event = {
             body: JSON.stringify({
                 domain: "test",
@@ -38,6 +41,7 @@ describe('lambda-login', () => {
             }),
         };
         const response = await handler(event);
+        jest.runAllTimers()
         expect(response.statusCode).toBe(400);
     });
 });

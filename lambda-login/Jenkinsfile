@@ -40,7 +40,7 @@ pipeline {
                 withCredentials([
                     usernamePassword(
                         credentialsId: 'AWSJenkinsDeploy',
-                        usernameVariable: 'accessKeyId'
+                        usernameVariable: 'accessKeyId',
                         passwordVariable: 'accessKeySecret')]) {
                     deployLambda([
                         alias: '',

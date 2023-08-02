@@ -27,13 +27,13 @@ pipeline {
                 }
             }
         }
-        stage('Unit & Integration Tests') {
-            environment {
+        stage('Unit Tests') {
+            /*environment { // Should'nt be used in unit tests, only integration
                 LOCAL_ENDPOINT = 'http://localstack_main:4566'
 
                 DB_TABLE = 'nikxy-auth'
                 JWT_SECRET_KEY = 'nikxy/auth/jwtsecrets'
-            }
+            }*/
             steps {
                 dir(PROJECT_FOLDER) {
                     sh 'npm test'

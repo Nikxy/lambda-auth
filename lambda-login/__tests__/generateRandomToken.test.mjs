@@ -1,6 +1,6 @@
 import generateRandomToken from "../utils/generateRandomToken";
 
-describe("util function generateRandomToken", () => {
+describe("util function generateRandomToken", async () => {
     
   test("should return 32 characters as default", async () => {
     const token = generateRandomToken();

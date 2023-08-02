@@ -34,6 +34,9 @@ pipeline {
                 DB_TABLE = 'nikxy-auth'
                 JWT_SECRET_KEY = 'nikxy/auth/jwtsecrets'
             }*/
+            when {
+                changeset "**/*js"
+            }
             steps {
                 dir(PROJECT_FOLDER) {
                     sh 'npm run test_ci'

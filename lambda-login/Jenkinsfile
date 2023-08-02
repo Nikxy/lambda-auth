@@ -9,14 +9,14 @@ pipeline {
             }
         }
         stage('Install dependencies') {
-            /*when {
+            when {
                 changeset "lambda-login/package.json"
-            }*/
+            }
 
             steps {
-                //dir('lambda-login') {
+                dir('lambda-login') {
                     sh 'npm install'
-                //}
+                }
             }
         }
         stage('Integration Tests'){
@@ -28,10 +28,10 @@ pipeline {
                 JWT_SECRET_KEY='nikxy/auth/jwtsecrets'
             }
             steps {
-                //dir('lambda-login') {
+                dir('lambda-login') {
                     sh 'npm run clear_jest'
                     sh 'npm test'
-                //}
+                }
             }
         }
     }

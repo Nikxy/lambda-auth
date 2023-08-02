@@ -47,9 +47,17 @@ pipeline {
                 }
             }
         }
-        stage('Integration Tests'){
+        stage('Install AWS Sam'){
+            steps{
+                sh 'python3 -m venv venv && venv/bin/pip install aws-sam-cli'
+                sh 'sam --version'
+                stash includes: '**/venv/**/*', name: 'venv'
+            }
+        }
+        stage('SAM Integration Tests'){
             steps {
-                sh 'sam local invoke LoginFunction -e sam-events/login-right.json --docker-network ssl-proxy'
+                unstash 'venv'
+                sh 'venv/bin/sam local invoke LoginFunction -e sam-events/login-right.json --docker-network ssl-proxy'
             }
         }
         stage('Deploy To AWS') {

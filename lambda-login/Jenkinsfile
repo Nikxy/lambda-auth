@@ -47,9 +47,15 @@ pipeline {
                 }
             }
         }
+        stage('Integration Tests'){
+            steps {
+                sh 'sam local invoke LoginFunction -e sam-events/login-right.json --docker-network ssl-proxy'
+            }
+        }
         stage('Deploy To AWS') {
             steps {
-                dir(PROJECT_FOLDER) {
+                sh 'echo "Deploying to AWS"'
+                /*dir(PROJECT_FOLDER) {
                     
                     sh (returnStdout:true, script: '''
                     zip -FSr deploymentFile.zip . -x \
@@ -83,7 +89,7 @@ pipeline {
                         ])
                         }
                     sh 'rm deploymentFile.zip'
-                }
+                }*/
             }
         }
     }

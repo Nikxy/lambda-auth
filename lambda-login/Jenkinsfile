@@ -1,5 +1,10 @@
+/* groovylint-disable LineLength, NestedBlockDepth */
+/* groovylint-disable-next-line CompileStatic */
 pipeline {
     agent any
+    PROJECT_FOLDER = 'lambda-login'
+    LOCALSTACK_ENDPOINT = 'http://localstack_main:4566'
+    AWS_REGION = 'eu-central-1'
     tools { nodejs 'Node 18.x' }
 
     stages {
@@ -15,41 +20,41 @@ pipeline {
             }
 
             steps {
-                dir('lambda-login') {
+                dir(PROJECT_FOLDER) {
                     sh 'npm install'
                 }
             }
         }
         stage('Unit & Integration Tests') {
             environment {
-                REGION = 'eu-central-1'
+                REGION = AWS_REGION
                 DB_TABLE = 'nikxy-auth'
-                DB_ENDPOINT = 'http://localstack_main:4566'
-                SECRETS_ENDPOINT = 'http://localstack_main:4566'
+                DB_ENDPOINT = LOCALSTACK_ENDPOINT
+                SECRETS_ENDPOINT = LOCALSTACK_ENDPOINT
                 JWT_SECRET_KEY = 'nikxy/auth/jwtsecrets'
             }
             steps {
-                dir('lambda-login') {
+                dir(PROJECT_FOLDER) {
                     sh 'npm test'
                 }
             }
         }
         stage('Deploy To AWS') {
             steps {
-                dir('lambda-login') {
-                    
+                dir(PROJECT_FOLDER) {
                     sh 'zip -FSr deploymentFile.zip . -x ./jest.config.mjs ./__tests__/**\\* ./__tests__/ ./node_modules/@aws-sdk/**\\* ./node_modules/@aws-sdk/'
                     withCredentials([
                         usernamePassword(
                             credentialsId: 'AWSJenkinsDeploy',
                             usernameVariable: 'accessKeyId',
-                            passwordVariable: 'accessKeySecret')]) {
-                                sh 'echo $accessKeyId';
+                            passwordVariable: 'accessKeySecret'
+                        )]) {
+                        sh 'echo $accessKeyId'
                         deployLambda([
                             alias: '',
                             artifactLocation: 'deploymentFile.zip',
                             awsAccessKeyId: accessKeyId,
-                            awsRegion: 'eu-central-1',
+                            awsRegion: AWS_REGION,
                             awsSecretKey: accessKeySecret,
                             deadLetterQueueArn: '',
                             description: '',
@@ -60,7 +65,7 @@ pipeline {
                             securityGroups: '', subnets: '', timeout: '',
                             updateMode: 'code'
                         ])
-                    }
+                        }
                     sh 'rm deploymentFile.zip'
                 }
             }

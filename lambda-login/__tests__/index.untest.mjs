@@ -1,14 +1,19 @@
 import {jest} from '@jest/globals'
 import { handler } from '../index.mjs';
-jest.useFakeTimers();
+//jest.useFakeTimers();
 
 describe('lambda-login', () => {
+    beforeEach(() => {
+        jest.useFakeTimers();
+      });
+    afterEach(() => {
+        jest.runAllTimers();
+    });
     it('body should be valid JSON', async () => {
         const event = {
             body: "adsasd",
         };
         const response = await handler(event);
-        jest.runAllTimers()
         expect(response.statusCode).toBe(400);
     });
     it('body should contain domain,username and password ', async () => {
@@ -18,7 +23,6 @@ describe('lambda-login', () => {
             }),
         };
         const response = await handler(event);
-        jest.runAllTimers()
         expect(response.statusCode).toBe(400);
     });
     it('body should contain domain,username and password ', async () => {
@@ -29,7 +33,6 @@ describe('lambda-login', () => {
             }),
         };
         const response = await handler(event);
-        jest.runAllTimers()
         expect(response.statusCode).toBe(400);
     });
     it('invalid password', async () => {
@@ -41,7 +44,6 @@ describe('lambda-login', () => {
             }),
         };
         const response = await handler(event);
-        jest.runAllTimers()
         expect(response.statusCode).toBe(400);
     });
 });

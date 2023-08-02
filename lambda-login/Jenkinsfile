@@ -1,4 +1,5 @@
-
+def PROJECT_FOLDER = 'lambda-login'
+def LOCALSTACK_ENDPOINT = 'http://localstack_main:4566'
 
 pipeline {
     agent any
@@ -6,9 +7,7 @@ pipeline {
     tools { nodejs 'Node 18.x' }
 
     environment {
-        PROJECT_FOLDER = 'lambda-login'
-        LOCALSTACK_ENDPOINT = 'http://localstack_main:4566'
-        AWS_REGION = 'eu-central-1'
+        REGION = 'eu-central-1'
     }
 
     stages {
@@ -31,10 +30,9 @@ pipeline {
         }
         stage('Unit & Integration Tests') {
             environment {
-                REGION = AWS_REGION
                 DB_TABLE = 'nikxy-auth'
-                DB_ENDPOINT = LOCALSTACK_ENDPOINT
-                SECRETS_ENDPOINT = LOCALSTACK_ENDPOINT
+                DB_ENDPOINT = '${LOCALSTACK_ENDPOINT}'
+                SECRETS_ENDPOINT = '${LOCALSTACK_ENDPOINT}'
                 JWT_SECRET_KEY = 'nikxy/auth/jwtsecrets'
             }
             steps {
@@ -58,7 +56,7 @@ pipeline {
                             alias: '',
                             artifactLocation: 'deploymentFile.zip',
                             awsAccessKeyId: accessKeyId,
-                            awsRegion: AWS_REGION,
+                            awsRegion: "${REGION}",
                             awsSecretKey: accessKeySecret,
                             deadLetterQueueArn: '',
                             description: '',

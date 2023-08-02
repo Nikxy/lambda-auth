@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "clear_jest": "jest --clearCache",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --no-cache"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "author": "",
   "license": "ISC",

@@ -58,7 +58,6 @@ pipeline {
             }*/
             steps {
                 sh (returnStdout:true, script: 'python3 -m venv venv && venv/bin/pip install aws-sam-cli')
-                sh 'docker version'
                 script {
                     def samCommand = '''venv/bin/sam local invoke LoginFunction \
                         --docker-network ssl-proxy \

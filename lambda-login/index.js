@@ -19,7 +19,7 @@ if (process.env.JWT_SECRET_KEY == undefined) {
 }
 
 // Create Lambda Handler
-export const handler = async (event) => {
+const handler = async (event,context) => {
   // Init data from request, check if valid
   let data;
   try {
@@ -98,6 +98,7 @@ export const handler = async (event) => {
 
   return response.OK({ token: token });
 };
+export { handler };
 
 function initDB(){
   // Configure AWS DynamoDB

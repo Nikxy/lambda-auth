@@ -108,7 +108,7 @@ function initDB(){
   return DynamoDBDocumentClient.from(client);
 }
 
-export const initData = (body) => {
+function initData(body){
   let data;
   try {
     data = JSON.parse(body);

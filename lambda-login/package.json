@@ -2,7 +2,7 @@
   "name": "jwt-login-lambda",
   "version": "1.0.0",
   "description": "",
-  "main": "index.mjs",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "clear_jest": "jest --clearCache",

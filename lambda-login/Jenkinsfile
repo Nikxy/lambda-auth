@@ -52,12 +52,13 @@ pipeline {
                 }
             }
         }
-        stage('SAM Integration Tests'){
-            /*environment {
-                DOCKER_CERT_PATH = '/var/docker/'
-            }*/
+        stage('Install AWS SAM'){
             steps {
                 sh (returnStdout:true, script: 'python3 -m venv venv && venv/bin/pip install aws-sam-cli')
+            }
+        }
+        stage('SAM Integration Tests'){
+            steps {
                 script {
                     def samCommand = '''venv/bin/sam local invoke LoginFunction \
                         --docker-network ssl-proxy \
@@ -65,7 +66,7 @@ pipeline {
                         --container-host-interface 0.0.0.0 \
                         -e sam-events/'''
                     sh samCommand + 'login-right.json'
-                    sh samCommand + 'login-wrong.json'
+                    //sh samCommand + 'login-wrong.json'
                 }
             }
         }

@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  auth.nikxy.dev
+
+  SAM Template for auth.nikxy.dev testing
+
+Globals:
+  Function:
+    Timeout: 10
+
+Resources:
+  LoginFunction:
+    FunctionName: LoginFunction
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda-login/
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          REGION: il-central-1
+          DB_TABLE: nikxy-auth
+          JWT_SECRET_KEY: "nikxy/auth/jwtsecrets"
+          DB_ENDPOINT: "http://localstack.dev.callandorit.net"
+          SECRETS_ENDPOINT: "http://localstack.dev.callandorit.net"
+      Events:
+        Login:
+          Type: Api
+          Properties:
+            Path: /login
+            Method: post
+        Refresh:
+          Type: Api
+          Properties:
+            Path: /refresh
+            Method: post

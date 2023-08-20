@@ -5,11 +5,14 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "clear_jest": "jest --clearCache",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test_ci": "node --experimental-vm-modules node_modules/jest/bin/jest.js --ci --reporters=default --reporters=jest-junit"
+		"test": "npm run test:unit && npm run test:integration",
+		"test:unit": "mocha test/unit",
+		"test:integration": "mocha test/integration",
+		"test_ci": "npm run test_ci:unit && npm run test_ci:integration",
+		"test_ci:unit": "mocha test/unit --reporter mocha-junit-reporter --reporter-options mochaFile=./junit.xml",
+		"test_ci:integration": "mocha test/integration --reporter mocha-junit-reporter --reporter-options mochaFile=./junit.xml"
   },
-  "author": "",
+	"author": "Nikxy",
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.382.0",
@@ -19,7 +22,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "jest": "^29.6.1",
-    "jest-junit": "^16.0.0"
+		"mocha": "^10.2.0",
+		"mocha-junit-reporter": "^2.2.1"
   }
 }

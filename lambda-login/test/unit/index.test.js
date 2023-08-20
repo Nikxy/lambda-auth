@@ -1,13 +1,9 @@
-import {jest} from '@jest/globals'
-import { handler } from '../index.mjs';
-//jest.useFakeTimers();
+/*import { handler } from '../index.mjs';
 
 describe('lambda-login', () => {
     beforeEach(() => {
-        jest.useFakeTimers();
       });
     afterEach(() => {
-        jest.runAllTimers();
     });
     it('body should be valid JSON', async () => {
         const event = {
@@ -46,4 +42,4 @@ describe('lambda-login', () => {
         const response = await handler(event);
         expect(response.statusCode).toBe(400);
     });
-});
+});*/

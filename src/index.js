@@ -16,6 +16,10 @@ if (process.env.JWT_SECRET == undefined) {
   console.error("env JWT_SECRET_KEY not set");
   process.exit(1);
 }
+if (process.env.REGION == undefined) {
+	console.error("env REGION not set");
+	process.exit(1);
+}
 
 // Create Lambda Handler
 const handler = async (event,context) => {

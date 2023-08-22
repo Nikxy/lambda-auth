@@ -37,3 +37,13 @@ Resources:
           Properties:
             Path: /refresh
             Method: post
+        Status:
+          Type: Api
+          Properties:
+            Path: /status
+            Method: post
+        Logout:
+          Type: Api
+          Properties:
+            Path: /logout
+            Method: post

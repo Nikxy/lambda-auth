@@ -36,7 +36,12 @@ const handler = async (event,context) => {
   try {
 		jwtSecret = await getSecret(process.env.JWT_SECRET);
   } catch (e) {
-    return response.ServerError(e.message);
+		var message = e.message;
+
+		if (e.$response != undefined)
+			console.error(message + ": " + e.$response.reason);
+		else console.error(message);
+		return response.ServerError();
   }
   // Check if domain secret is set
   if (!jwtSecret[data.domain])

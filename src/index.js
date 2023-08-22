@@ -65,7 +65,8 @@ const handler = async (event,context) => {
 
     results = await docClient.send(command);
   } catch (e) {
-    return response.ServerError('db:'+e.message);
+		console.error("DB: " + e.message);
+		return response.ServerError();
   }
   // Check if user exists
   if (results.Items.length < 1)
@@ -92,7 +93,8 @@ const handler = async (event,context) => {
   try {
     await docClient.send(command);
   } catch (e) {
-    return response.ServerError("Can't put refresh token: " + e.message);
+		console.error("DB: " + e.message);
+		return response.ServerError();
   }
 
   const tokenData = {

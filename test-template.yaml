@@ -21,7 +21,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          REGION: il-central-1
+          REGION: eu-central-1
           DB_TABLE: nikxy-auth
           JWT_SECRET_KEY: "nikxy/auth/jwtsecrets"
           DB_ENDPOINT: "http://localstack.dev.callandorit.net"

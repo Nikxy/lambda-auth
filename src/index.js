@@ -34,7 +34,7 @@ const handler = async (event,context) => {
   // Init JWT secret
   let jwtSecret;
   try {
-    jwtSecret = await getSecret(process.env.JWT_SECRET_KEY);
+		jwtSecret = await getSecret(process.env.JWT_SECRET);
   } catch (e) {
     return response.ServerError(e.message);
   }

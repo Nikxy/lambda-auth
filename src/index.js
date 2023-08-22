@@ -1,12 +1,11 @@
-import { DynamoDBClient  } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, ScanCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { ScanCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
 
 import response from "./utils/response.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import getSecret from "./utils/getSecret.js";
-import checkLocal from "./utils/checkLocal.js";
+import initDB from "./utils/initDB.js";
 
 // Check if all env variables are set
 if (process.env.DB_TABLE == undefined) {
@@ -100,16 +99,7 @@ const handler = async (event,context) => {
 };
 export { handler };
 
-function initDB(){
-  // Configure AWS DynamoDB
-  const dbConfig = { region: "eu-central-1" };
-  checkLocal(dbConfig);
-
-  const client = new DynamoDBClient(dbConfig);
-  return DynamoDBDocumentClient.from(client);
-}
-
-function initData(body){
+function initData(body) {
   let data;
   try {
     data = JSON.parse(body);

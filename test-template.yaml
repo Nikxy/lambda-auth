@@ -23,9 +23,8 @@ Resources:
         Variables:
           REGION: eu-central-1
           DB_TABLE: nikxy-auth
-          JWT_SECRET_KEY: "nikxy/auth/jwtsecrets"
-          DB_ENDPOINT: "http://localstack.dev.callandorit.net"
-          SECRETS_ENDPOINT: "http://localstack.dev.callandorit.net"
+          JWT_SECRET: "nikxy/auth/jwtsecrets"
+          LOCAL_ENDPOINT: "http://localstack.dev.callandorit.net"
       Events:
         Login:
           Type: Api

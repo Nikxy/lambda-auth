@@ -1,5 +1,5 @@
-LOG_FILE=./login-lambda-deploy.log
-LAMBDA_NAME=lambda-login
+LOG_FILE=./lambda-deploy.log
+SRC_DIR=src
 
 echo 'Starting demployment...'
 if [ -e $LOG_FILE ]
@@ -8,10 +8,10 @@ then
     rm $LOG_FILE
 fi
 echo 'Creating zip archive...'
-cd $LAMBDA_NAME
-zip -r $LAMBDA_NAME.zip * -x /__tests__ jest.config.mjs &> /dev/null
+cd $SRC_DIR
+zip -r deploy.zip * -x ./test**\* -x ./node_modules/@aws-sdk**\* -x ./node_modules/@aws-crypto**\* &> /dev/null
 echo 'Uploading...'
-aws lambda --function-name update-function-code nikxy-auth-login --zip-file fileb://$LAMBDA_NAME.zip  &> ../$LOG_FILE
+aws lambda --function-name update-function-code nikxy-auth --zip-file fileb://deploy.zip  &> ../$LOG_FILE
 echo 'Removing zip archive...'
-rm $LAMBDA_NAME.zip
+rm deploy.zip
 echo 'Done.'

@@ -5,7 +5,7 @@ import {
 
 import checkLocal from "./checkLocal.js";
 
-const config = { region: "eu-central-1" };
+const config = { region: process.env.REGION };
 
 checkLocal(config);
 

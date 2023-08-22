@@ -3,14 +3,15 @@ import checkLocal from "#utils/checkLocal.js";
 
 const testUrl = "http://test";
 const OLD_ENV = process.env;
-before(() => {
-	process.env = { ...OLD_ENV }; // Make a copy
-});
-after(() => {
-	process.env = OLD_ENV; // Restore old environment
-});
+
 
 describe("util function checkLocal", () => {
+	before(() => {
+		process.env = { ...OLD_ENV }; // Make a copy
+	});
+	after(() => {
+		process.env = OLD_ENV; // Restore old environment
+	});
 	it("shouldn't change config if local endpoint wasn't provided", async () => {
 		const config = {};
 

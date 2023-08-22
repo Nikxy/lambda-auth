@@ -2,7 +2,6 @@
 	"name": "jwt-login-lambda",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
 	"type": "module",
 	"scripts": {
 		"test": "npm run test:unit && npm run test:integration",

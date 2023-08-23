@@ -116,8 +116,10 @@ function initData(body) {
 	} catch (e) {
 		throw new Error("Please provide a valid JSON body");
 	}
+	if(data == null)
+		throw new Error("Please provide a valid JSON body");
 
 	if (!data.username || !data.password || !data.domain)
-		throw new Error("Username, password and domain are required");
+		throw new Error("Please provide domain,username & password");
 	return data;
 }

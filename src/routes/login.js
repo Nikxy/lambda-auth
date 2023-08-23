@@ -63,7 +63,7 @@ export default async function (event) {
 	// Generate refresh token
 	const refreshToken = uuidv4();
 	const dateNow = Date.now();
-	const command = new PutCommand({
+	const command = new PutItemCommand({
 		TableName: process.env.DB_TABLE,
 		Item: {
 			id: refreshToken,

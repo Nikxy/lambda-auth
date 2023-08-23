@@ -7,7 +7,7 @@ pipeline {
         nodejs 'Node 18.x'
     }
     environment {
-        AWS_SAM_BIN = fileExists 'venv/bin/sam'
+        AWS_SAM_EXISTS = fileExists 'venv/bin/sam'
     }
 
     stages {
@@ -43,7 +43,7 @@ pipeline {
         }
         stage('Install AWS SAM') {
             
-            when { expression { AWS_SAM_BIN == 'false' } }
+            when { expression { AWS_SAM_EXISTS == 'false' } }
             steps {
                 echo 'Installing AWS SAM'
                 sh(returnStdout:true, script: 'python3 -m venv venv && venv/bin/pip install aws-sam-cli')

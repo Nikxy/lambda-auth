@@ -8,7 +8,7 @@
 		"test:unit": "mocha test/unit",
 		"test:integration": "export $(cat ../test.env | xargs) && mocha test/integration -t 10000",
 		"test_ci:unit": "mocha test/unit --reporter mocha-junit-reporter --reporter-options mochaFile=./junit.xml",
-		"test_ci:integration": "export $(cat ../test.env | xargs) && mocha test/integration -t 10000 --reporter mocha-junit-reporter --reporter-options mochaFile=./junit-integration.xml"
+		"test_ci:integration": "mocha test/integration -t 10000 --reporter mocha-junit-reporter --reporter-options mochaFile=./junit-integration.xml"
 	},
 	"author": "Nikxy",
 	"license": "ISC",

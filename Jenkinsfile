@@ -48,6 +48,12 @@ pipeline {
             }
         }
         stage('SAM Integration Tests'){
+            environment 
+            {
+                TEST_DOMAIN='orders'
+                TEST_USERNAME='orders'
+                TEST_PASSWORD='0SdoPPhVztwbuSt2lTgv'
+            }
             steps {
                 sh '''nohup venv/bin/sam local start-api \
                         -t test-template.yaml \

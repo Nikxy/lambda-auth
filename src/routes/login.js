@@ -1,6 +1,7 @@
 import { DynamoDBClient, ScanCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
 
 import response from "#utils/response.js";
+import getSecret from "#utils/getSecret.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";

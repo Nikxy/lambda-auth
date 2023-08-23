@@ -2,7 +2,7 @@ def SRC_FOLDER = 'src'
 
 pipeline {
     agent any
-    
+
     tools {
         nodejs 'Node 18.x'
     }
@@ -28,28 +28,27 @@ pipeline {
         stage('Unit Tests') {
             steps {
                 dir(SRC_FOLDER) {
-                    sh 'npm run test_ci:unit &> ../unit.log'
-                }
-            }
-            post {
-                always {
-                    dir(SRC_FOLDER) {
+                    script {
+                        def exitStatus = sh returnStatus: true, script: 'npm run test_ci:unit'
                         junit 'junit.xml'
+                        if (exitStatus != 0) {
+                            error 'Unit tests failed'
+                        }
                     }
                 }
             }
         }
-        stage('Install AWS SAM'){
+        stage('Install AWS SAM') {
             steps {
-                sh (returnStdout:true, script: 'python3 -m venv venv && venv/bin/pip install aws-sam-cli')
+                sh(returnStdout:true, script: 'python3 -m venv venv && venv/bin/pip install aws-sam-cli')
             }
         }
-        stage('SAM Integration Tests'){
-            environment 
+        stage('SAM Integration Tests') {
+            environment
             {
-                TEST_DOMAIN='orders'
-                TEST_USERNAME='orders'
-                TEST_PASSWORD='0SdoPPhVztwbuSt2lTgv'
+                TEST_DOMAIN = 'orders'
+                TEST_USERNAME = 'orders'
+                TEST_PASSWORD = '0SdoPPhVztwbuSt2lTgv'
             }
             steps {
                 sh '''nohup venv/bin/sam local start-api \
@@ -58,15 +57,14 @@ pipeline {
                         --container-host 172.17.0.1 \
                         --container-host-interface 0.0.0.0 \
                         -v /home/diana/dev/projects/auth.nikxy.dev &> ./sam.log &'''
-                sh 'sleep 5'
+                sh 'sleep 3'
                 dir(SRC_FOLDER) {
-                    sh 'npm run test_ci:integration &> ../integration.log'
-                }
-            }
-            post {
-                always {
-                    dir(SRC_FOLDER) {
+                    script {
+                        def exitStatus = sh returnStatus: true, script: 'npm run test_ci:integration'
                         junit 'junit-integration.xml'
+                        if (exitStatus != 0) {
+                            error 'Integration tests failed'
+                        }
                     }
                 }
             }
@@ -75,7 +73,7 @@ pipeline {
             steps {
                 sh 'echo "Deploying to AWS"'
                 /*dir(SRC_FOLDER) {
-                    
+
                     sh (returnStdout:true, script: '''
                     zip -FSr deploymentFile.zip . -x \
                     ./jest.config.mjs \

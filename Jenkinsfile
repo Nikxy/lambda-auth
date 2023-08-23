@@ -1,14 +1,10 @@
-def PROJECT_FOLDER = 'lambda-login'
+def SRC_FOLDER = 'src'
 
 pipeline {
     agent any
     
     tools {
         nodejs 'Node 18.x'
-    }
-
-    environment {
-        REGION = 'eu-central-1'
     }
 
     stages {
@@ -20,33 +16,27 @@ pipeline {
         }
         stage('Install dependencies') {
             when {
-                changeset 'lambda-login/package.json'
+                changeset 'src/package.json'
             }
 
             steps {
                 dir(PROJECT_FOLDER) {
-                    sh 'npm install'
+                    sh 'npm ci'
                 }
             }
         }
         stage('Unit Tests') {
-            /*environment { // Should'nt be used in unit tests, only integration
-                LOCAL_ENDPOINT = 'http://localstack_main:4566'
-
-                DB_TABLE = 'nikxy-auth'
-                JWT_SECRET_KEY = 'nikxy/auth/jwtsecrets'
-            }*/
             when {
                 changeset "**/*js"
             }
             steps {
-                dir(PROJECT_FOLDER) {
+                dir(SRC_FOLDER) {
                     sh 'npm run test_ci'
                 }
             }
             post {
                 always {
-                    dir(PROJECT_FOLDER) {
+                    dir(SRC_FOLDER) {
                         junit 'junit.xml'
                     }
                 }
@@ -75,7 +65,7 @@ pipeline {
         stage('Deploy To AWS') {
             steps {
                 sh 'echo "Deploying to AWS"'
-                /*dir(PROJECT_FOLDER) {
+                /*dir(SRC_FOLDER) {
                     
                     sh (returnStdout:true, script: '''
                     zip -FSr deploymentFile.zip . -x \

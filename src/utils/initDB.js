@@ -1,4 +1,4 @@
-import { checkLocal } from "./checkLocal.js";
+import checkLocal from "./checkLocal.js";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 

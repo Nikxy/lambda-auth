@@ -8,6 +8,7 @@ pipeline {
     }
     environment {
         AWS_SAM_EXISTS = fileExists 'venv/bin/sam'
+        REGION = 'il-central-1'
     }
 
     stages {
@@ -74,16 +75,10 @@ pipeline {
         stage('Deploy To AWS') {
             steps {
                 sh 'echo "Deploying to AWS"'
-                /*dir(SRC_FOLDER) {
+                dir(SRC_FOLDER) {
 
-                    sh (returnStdout:true, script: '''
-                    zip -FSr deploymentFile.zip . -x \
-                    ./jest.config.mjs \
-                    ./__tests__/**\\* \
-                    ./__tests__/ \
-                    ./node_modules/@aws-sdk/**\\* \
-                    ./node_modules/@aws-sdk/
-                    ''')
+                    sh (returnStdout:true,
+                        script: 'zip -r deploy.zip * -x ./test**\* -x ./node_modules/@aws-sdk**\* -x ./node_modules/@aws-crypto**\*')
                     withCredentials([
                         usernamePassword(
                             credentialsId: 'AWSJenkinsDeploy',
@@ -93,21 +88,21 @@ pipeline {
                         sh 'echo $accessKeyId'
                         deployLambda([
                             alias: '',
-                            artifactLocation: 'deploymentFile.zip',
+                            artifactLocation: 'deploy.zip',
                             awsAccessKeyId: accessKeyId,
                             awsRegion: "${REGION}",
                             awsSecretKey: accessKeySecret,
                             deadLetterQueueArn: '',
                             description: '',
                             environmentConfiguration: [kmsArn: ''],
-                            functionName: 'nikxy-auth-login',
+                            functionName: 'nikxy-auth',
                             handler: '', memorySize: '',
                             role: '', runtime: '',
                             securityGroups: '', subnets: '', timeout: '',
                             updateMode: 'code'
                         ])
                         }
-                    sh 'rm deploymentFile.zip'
+                    sh 'rm deploy.zip'
                 }*/
             }
         }

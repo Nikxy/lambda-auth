@@ -57,12 +57,7 @@ pipeline {
                 TEST_PASSWORD = '0SdoPPhVztwbuSt2lTgv'
             }
             steps {
-                sh '''nohup venv/bin/sam local start-api \
-                        -t test-template.yaml \
-                        --docker-network ssl-proxy \
-                        --container-host 172.17.0.1 \
-                        --container-host-interface 0.0.0.0 \
-                        -v /home/diana/dev/projects/auth.nikxy.dev &> ./sam.log &'''
+                sh 'nohup ./sam-start.sh &'
                 sh 'sleep 3'
                 dir(SRC_FOLDER) {
                     script {

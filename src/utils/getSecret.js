@@ -11,7 +11,7 @@ checkLocal(config);
 
 const clientSecrets = new SecretsManagerClient(config);
 
-async function getSecret(secret_name) {
+export default async function(secret_name) {
   let response;
 
   try {
@@ -32,5 +32,3 @@ async function getSecret(secret_name) {
     throw e;
   }
 }
-
-export default getSecret;

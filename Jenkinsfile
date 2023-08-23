@@ -20,7 +20,7 @@ pipeline {
             }
 
             steps {
-                dir(PROJECT_FOLDER) {
+                dir(SRC_FOLDER) {
                     sh 'npm ci'
                 }
             }

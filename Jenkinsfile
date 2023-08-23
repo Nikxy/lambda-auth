@@ -28,7 +28,10 @@ pipeline {
         stage('Unit Tests') {
             steps {
                 dir(SRC_FOLDER) {
-                    sh 'npm run test_ci:unit'
+                    script {
+                        def output = sh(returnStdout: true, script: sh 'npm run test_ci:unit').trim()
+                        echo "Output: '${output}'"
+                    }
                 }
             }
             post {

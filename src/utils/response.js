@@ -1,12 +1,12 @@
 class Response {
 	OK = (body = null) =>
-		this.generate(200, body);
+		this.Generate(200, body);
 	BadRequest = (msg = null) =>
-		this.generate(400, msg ? { message: msg } : null);
+		this.Generate(400, msg ? { message: msg } : null);
 	ServerError = (msg = null) =>
-		this.generate(500, msg ? { message: msg } : null);
+		this.Generate(500, msg ? { message: msg } : null);
 
-	generate(statusCode, body) {
+	Generate(statusCode, body) {
 		const headers = {
 			"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
 			"Access-Control-Allow-Methods": "POST,OPTIONS",

@@ -78,7 +78,7 @@ pipeline {
                 dir(SRC_FOLDER) {
 
                     sh (returnStdout:true,
-                        script: 'zip -r deploy.zip * -x ./test**\* -x ./node_modules/@aws-sdk**\* -x ./node_modules/@aws-crypto**\*')
+                        script: 'zip -r deploy.zip * -x ./test**\\* -x ./node_modules/@aws-sdk**\\* -x ./node_modules/@aws-crypto**\\*')
                     withCredentials([
                         usernamePassword(
                             credentialsId: 'AWSJenkinsDeploy',

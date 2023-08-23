@@ -103,7 +103,7 @@ pipeline {
                         ])
                         }
                     sh 'rm deploy.zip'
-                }*/
+                }
             }
         }
     }

@@ -28,10 +28,7 @@ pipeline {
         stage('Unit Tests') {
             steps {
                 dir(SRC_FOLDER) {
-                    script {
-                        def output = sh(returnStdout: true, script: 'npm run test_ci:unit')
-                        echo "Output: '${output}'"
-                    }
+                    sh 'npm run test_ci:unit &> ../unit.log'
                 }
             }
             post {
@@ -63,8 +60,7 @@ pipeline {
                         -v /home/diana/dev/projects/auth.nikxy.dev &> ./sam.log &'''
                 sh 'sleep 5'
                 dir(SRC_FOLDER) {
-                    def output = sh(returnStdout: true, script: 'npm run test_ci:integration')
-                        echo "Output: '${output}'"
+                    sh 'npm run test_ci:integration &> ../integration.log'
                 }
             }
             post {

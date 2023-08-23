@@ -6,9 +6,9 @@ const testData = { test: "test" };
 const errorData = { message: "test" };
 
 describe("[util] response", () => {
-	describe("generate", () => {
+	describe("Generate", () => {
 		it("should respond with specified status & data", async () => {
-			const res = response.generate(200, testData);
+			const res = response.Generate(200, testData);
 			assert.equal(res.statusCode, 200);
 			assert.deepEqual(res.body, JSON.stringify(testData));
 		});

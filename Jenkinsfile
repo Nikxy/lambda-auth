@@ -58,7 +58,7 @@ pipeline {
             }
             steps {
                 sh 'chmod +x sam-start-ci.sh'
-                sh 'nohup sam-start-ci.sh > $WORKSPACE/sam.log 2>&1 &'
+                sh 'nohup ./sam-start-ci.sh > $WORKSPACE/sam.log 2>&1 &'
                 sh 'sleep 3'
                 dir(SRC_FOLDER) {
                     script {

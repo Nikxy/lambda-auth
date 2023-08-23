@@ -31,7 +31,7 @@ pipeline {
             }
             steps {
                 dir(SRC_FOLDER) {
-                    sh 'npm run test_ci'
+                    sh 'npm run test_ci:unit'
                 }
             }
             post {
@@ -49,16 +49,22 @@ pipeline {
         }
         stage('SAM Integration Tests'){
             steps {
-                script {
-                    def samCommand = '''nohup venv/bin/sam local start-api \
+                sh '''nohup venv/bin/sam local start-api \
                         -t test-template.yaml \
                         --docker-network ssl-proxy \
                         --container-host 172.17.0.1 \
                         --container-host-interface 0.0.0.0 \
-                        -v /home/diana/dev/projects/auth.nikxy.dev'''
-
-                    def samProcess = sh(returnStdout:true, script: samCommand + " ./sam.log &");
-                    echo samProcess;
+                        -v /home/diana/dev/projects/auth.nikxy.dev &> ./sam.log &'''
+                sh 'sleep 5'
+                dir(SRC_FOLDER) {
+                    sh 'npm run test_ci:integration'
+                }
+            }
+            post {
+                always {
+                    dir(SRC_FOLDER) {
+                        junit 'junit-integration.xml'
+                    }
                 }
             }
         }

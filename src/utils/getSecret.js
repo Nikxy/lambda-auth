@@ -3,13 +3,9 @@ import {
   GetSecretValueCommand,
 } from "@aws-sdk/client-secrets-manager";
 
-import checkLocal from "./checkLocal.js";
+import initAWSConfig from "#utils/initConfig.js";
 
-const config = { region: process.env.REGION };
-
-checkLocal(config);
-
-const clientSecrets = new SecretsManagerClient(config);
+const clientSecrets = new SecretsManagerClient(initAWSConfig());
 
 export default async function(secret_name) {
   let response;

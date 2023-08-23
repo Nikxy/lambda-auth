@@ -4,8 +4,7 @@ import response from "#utils/response.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
-import getSecret from "#utils/getSecret.js";
-import initDB from "#utils/initDB.js";
+import initAWSConfig from "#utils/initConfig.js";
 
 export default async function (event) {
     // Init data from request, check if valid
@@ -31,7 +30,7 @@ export default async function (event) {
 	// Check if domain secret is set
 	if (!jwtSecret[data.domain]) return response.BadRequest("Invalid Domain");
 
-	const docClient = initDB();
+	const docClient = new DynamoDBClient(initAWSConfig());
 	// Get user from DynamoDB
 	let results;
 	try {

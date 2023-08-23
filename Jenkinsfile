@@ -57,7 +57,7 @@ pipeline {
                 TEST_PASSWORD = '0SdoPPhVztwbuSt2lTgv'
             }
             steps {
-                sh 'cmod +x sam-start.sh'
+                sh 'chmod +x sam-start.sh'
                 sh 'nohup ./sam-start.sh &'
                 sh 'sleep 3'
                 dir(SRC_FOLDER) {

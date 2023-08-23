@@ -6,7 +6,7 @@
 	"scripts": {
 		"test": "npm run test:unit && npm run test:integration",
 		"test:unit": "mocha test/unit",
-		"test:integration": "mocha test/integration -t 10000",
+		"test:integration": "export $(cat ../test.env | xargs) && mocha test/integration -t 10000",
 		"test_ci": "npm run test_ci:unit && npm run test_ci:integration",
 		"test_ci:unit": "mocha test/unit --reporter mocha-junit-reporter --reporter-options mochaFile=./junit.xml",
 		"test_ci:integration": "mocha test/integration --reporter mocha-junit-reporter --reporter-options mochaFile=./junit.xml"

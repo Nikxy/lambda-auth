@@ -1,4 +1,4 @@
-import { ScanCommand, PutCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBClient, ScanCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
 
 import response from "#utils/response.js";
 import jwt from "jsonwebtoken";

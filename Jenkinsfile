@@ -26,9 +26,6 @@ pipeline {
             }
         }
         stage('Unit Tests') {
-            when {
-                changeset "**/*js"
-            }
             steps {
                 dir(SRC_FOLDER) {
                     sh 'npm run test_ci:unit'

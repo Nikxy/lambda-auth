@@ -6,6 +6,9 @@ pipeline {
     tools {
         nodejs 'Node 18.x'
     }
+    environment {
+        AWS_SAM_BIN = fileExists 'venv/bin/sam'
+    }
 
     stages {
         stage('Clone Source') {
@@ -37,9 +40,6 @@ pipeline {
                     }
                 }
             }
-        }
-        environment {
-            AWS_SAM_BIN = fileExists 'venv/bin/sam'
         }
         stage('Install AWS SAM') {
             

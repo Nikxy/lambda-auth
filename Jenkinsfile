@@ -38,10 +38,11 @@ pipeline {
                 }
             }
         }
+        environment {
+            AWS_SAM_BIN = fileExists 'venv/bin/sam'
+        }
         stage('Install AWS SAM') {
-            environment{
-                AWS_SAM_BIN = fileExists 'venv/bin/sam'
-            }
+            
             when { expression { AWS_SAM_BIN == 'false' } }
             steps {
                 echo 'Installing AWS SAM'

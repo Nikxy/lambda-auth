@@ -40,7 +40,7 @@ Resources:
           Type: Api
           Properties:
             Path: /status
-            Method: post
+            Method: get
         Logout:
           Type: Api
           Properties:

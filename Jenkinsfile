@@ -50,16 +50,16 @@ pipeline {
         stage('SAM Integration Tests'){
             steps {
                 script {
-                    def samCommand = '''venv/bin/sam local start-api \
+                    def samCommand = '''nohup venv/bin/sam local start-api \
+                        -t test-template.yaml \
                         --docker-network ssl-proxy \
                         --container-host 172.17.0.1 \
                         --container-host-interface 0.0.0.0 \
-                        -v /home/diana/dev/auth.nikxy.dev'''
+                        -v /home/diana/dev/projects/auth.nikxy.dev'''
 
-                    def samProcess = sh(returnStdout:true, script: samCommand + " &> /dev/null &");
+                    def samProcess = sh(returnStdout:true, script: samCommand + " ./sam.log &");
                     echo samProcess;
                 }
-                echo samProcess;
             }
         }
         stage('Deploy To AWS') {

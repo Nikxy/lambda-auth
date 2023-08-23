@@ -16,10 +16,7 @@ export default async function(secret_name) {
 
   try {
     response = await clientSecrets.send(
-      new GetSecretValueCommand({
-        SecretId: secret_name,
-        VersionStage: "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified
-      })
+      new GetSecretValueCommand({ SecretId: secret_name })
     );
   } catch (error) {
     // For a list of exceptions thrown, see

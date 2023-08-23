@@ -29,7 +29,7 @@ pipeline {
             steps {
                 dir(SRC_FOLDER) {
                     script {
-                        def output = sh(returnStdout: true, script: sh 'npm run test_ci:unit').trim()
+                        def output = sh(returnStdout: true, script: 'npm run test_ci:unit').trim()
                         echo "Output: '${output}'"
                     }
                 }

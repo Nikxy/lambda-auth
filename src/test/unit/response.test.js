@@ -10,7 +10,7 @@ describe("util class response", () => {
 		it("should respond with specified status & data", async () => {
 			const res = response.generate(200, testData);
 			assert.equal(res.statusCode, 200);
-			assert.deepEqual(res.body, testData);
+			assert.deepEqual(res.body, JSON.stringify(testData));
 		});
 	});
 	describe("OK", () => {
@@ -22,7 +22,7 @@ describe("util class response", () => {
 		it("should respond ok with data", async () => {
 			const res = response.OK(testData);
 			assert.equal(res.statusCode, 200);
-			assert.deepEqual(res.body, testData);
+			assert.deepEqual(res.body, JSON.stringify(testData));
 		});
 	});
 	describe("BadRequest", () => {
@@ -34,7 +34,7 @@ describe("util class response", () => {
 		it("should respond 400 with error data", async () => {
 			const res = response.BadRequest(errorData.message);
 			assert.equal(res.statusCode, 400);
-			assert.deepEqual(res.body, errorData);
+			assert.deepEqual(res.body, JSON.stringify(errorData));
 		});
 	});
 	describe("ServerError", () => {
@@ -46,7 +46,7 @@ describe("util class response", () => {
 		it("should respond 500 with error data", async () => {
 			const res = response.ServerError(errorData.message);
 			assert.equal(res.statusCode, 500);
-			assert.deepEqual(res.body, errorData);
+			assert.deepEqual(res.body, JSON.stringify(errorData));
 		});
 	});
 });

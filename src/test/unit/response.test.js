@@ -5,7 +5,7 @@ import response from "#utils/response.js";
 const testData = { test: "test" };
 const errorData = { message: "test" };
 
-describe("util class response", () => {
+describe("[util] response", () => {
 	describe("generate", () => {
 		it("should respond with specified status & data", async () => {
 			const res = response.generate(200, testData);

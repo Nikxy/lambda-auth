@@ -1,7 +1,7 @@
 import assert from "assert";
 import generateRandomToken from "#utils/generateRandomToken.js";
 
-describe("util function generateRandomToken", () => {
+describe("[util] function generateRandomToken", () => {
 	it("should return 32 characters as default", async () => {
 		const token = generateRandomToken();
 		assert.equal(token.length, 32);

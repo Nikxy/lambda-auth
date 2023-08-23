@@ -3,7 +3,7 @@ import assert from "assert";
 import response from "#utils/response.js";
 
 const testData = { test: "test" };
-const errorData = { error: "test" };
+const errorData = { message: "test" };
 
 describe("util class response", () => {
 	describe("generate", () => {
@@ -32,7 +32,7 @@ describe("util class response", () => {
 			assert.equal(res.body, null);
 		});
 		it("should respond 400 with error data", async () => {
-			const res = response.BadRequest(errorData.error);
+			const res = response.BadRequest(errorData.message);
 			assert.equal(res.statusCode, 400);
 			assert.deepEqual(res.body, errorData);
 		});
@@ -44,7 +44,7 @@ describe("util class response", () => {
 			assert.equal(res.body, null);
 		});
 		it("should respond 500 with error data", async () => {
-			const res = response.ServerError(errorData.error);
+			const res = response.ServerError(errorData.message);
 			assert.equal(res.statusCode, 500);
 			assert.deepEqual(res.body, errorData);
 		});

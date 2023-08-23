@@ -29,7 +29,7 @@ pipeline {
             steps {
                 dir(SRC_FOLDER) {
                     script {
-                        def output = sh(returnStdout: true, script: 'npm run test_ci:unit').trim()
+                        def output = sh(returnStdout: true, script: 'npm run test_ci:unit')
                         echo "Output: '${output}'"
                     }
                 }
@@ -63,7 +63,8 @@ pipeline {
                         -v /home/diana/dev/projects/auth.nikxy.dev &> ./sam.log &'''
                 sh 'sleep 5'
                 dir(SRC_FOLDER) {
-                    sh 'npm run test_ci:integration'
+                    def output = sh(returnStdout: true, script: 'npm run test_ci:integration')
+                        echo "Output: '${output}'"
                 }
             }
             post {

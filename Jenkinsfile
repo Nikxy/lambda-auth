@@ -50,6 +50,7 @@ pipeline {
                 TEST_DOMAIN = 'orders'
                 TEST_USERNAME = 'orders'
                 TEST_PASSWORD = '0SdoPPhVztwbuSt2lTgv'
+                REGION = 'eu-central-1'
             }
             steps {
                 sh 'chmod +x sam-start-ci.sh'

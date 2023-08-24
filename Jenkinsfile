@@ -78,14 +78,10 @@ pipeline {
                     withCredentials([
                         usernamePassword(
                             credentialsId: 'AWSJenkinsDeploy',
-                            usernameVariable: 'accessKeyId',
-                            passwordVariable: 'accessKeySecret'
+                            usernameVariable: 'AWS_ACCESS_KEY_ID',
+                            passwordVariable: 'AWS_SECRET_ACCESS_KEY'
                         )]) {
-                            sh 'echo ${accessKeyId}';
-                            sh '''\
-                            AWS_ACCESS_KEY_ID=${accessKeyId} \
-                            AWS_SECRET_ACCESS_KEY=${accessKeySecret} \
-                            && aws lambda update-function-code --function-name ${AWS_LAMBDA_NAME} --zip-file fileb://deploy.zip'''
+                            sh 'aws lambda update-function-code --function-name ${AWS_LAMBDA_NAME} --zip-file fileb://deploy.zip'
                         }
                     sh 'rm deploy.zip'
                 }

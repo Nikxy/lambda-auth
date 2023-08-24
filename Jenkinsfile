@@ -8,7 +8,7 @@ pipeline {
     }
     environment {
         AWS_SAM_EXISTS = fileExists 'venv/bin/sam'
-        REGION = 'eu-central-1'
+        REGION = 'il-central-1'
     }
 
     stages {

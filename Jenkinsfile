@@ -8,6 +8,7 @@ pipeline {
     }
     environment {
         AWS_SAM_EXISTS = fileExists 'venv/bin/sam'
+        REGION = 'eu-central-1'
     }
 
     stages {
@@ -49,6 +50,7 @@ pipeline {
                 TEST_DOMAIN = 'orders'
                 TEST_USERNAME = 'orders'
                 TEST_PASSWORD = '0SdoPPhVztwbuSt2lTgv'
+                REGION = 'eu-central-1'
             }
             steps {
                 sh 'chmod +x sam-start-ci.sh'
@@ -83,7 +85,7 @@ pipeline {
                             alias: '',
                             artifactLocation: 'deploy.zip',
                             awsAccessKeyId: accessKeyId,
-                            awsRegion: 'il-central-1',
+                            awsRegion: "${REGION}",
                             awsSecretKey: accessKeySecret,
                             deadLetterQueueArn: '',
                             description: '',

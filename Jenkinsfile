@@ -15,7 +15,7 @@ pipeline {
         stage('Clone Source') {
             steps {
                 git branch: 'master',
-                url: 'https://c16adb70562dc0fcfb69f83802bafb4044b3ef4e@gogs.dev.callandorit.net/nikxy/lambda-auth.git'
+                url: 'https://gogs.dev.callandorit.net/nikxy/lambda-auth.git'
             }
         }
         stage('Install dependencies') {

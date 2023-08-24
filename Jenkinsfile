@@ -81,6 +81,7 @@ pipeline {
                             usernameVariable: 'accessKeyId',
                             passwordVariable: 'accessKeySecret'
                         )]) {
+                            sh 'echo ${accessKeyId}';
                             sh '''\
                             AWS_ACCESS_KEY_ID=${accessKeyId} \
                             AWS_SECRET_ACCESS_KEY=${accessKeySecret} \

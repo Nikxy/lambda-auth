@@ -84,7 +84,7 @@ pipeline {
                             sh '''\
                             AWS_ACCESS_KEY_ID=${accessKeyId} \
                             AWS_SECRET_ACCESS_KEY=${accessKeySecret} \
-                            && aws lambda --function-name update-function-code ${AWS_LAMBDA_NAME} --zip-file fileb://deploy.zip  &> ../deploy.log'''
+                            && aws lambda update-function-code --function-name ${AWS_LAMBDA_NAME} --zip-file fileb://deploy.zip'''
                         }
                     sh 'rm deploy.zip'
                 }

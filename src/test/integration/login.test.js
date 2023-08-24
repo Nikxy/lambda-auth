@@ -60,8 +60,6 @@ describe("Login Testing", () => {
 		}
 		
 	});
-
-	it("[login]", async () => {});
 });
 
 //process.env.TEST_DOMAIN

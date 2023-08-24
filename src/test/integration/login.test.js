@@ -18,9 +18,9 @@ describe("Login Testing", () => {
 			"application/json"
 		);
 		try {
-			var json = await response.json();
-			expect(json).to.be.an("object");
-			expect(json).to.have.property("message");
+			var object = await response.json();
+			expect(object).to.be.an("object");
+			expect(object).to.have.property("message");
 		} catch (e) {
 			assert.fail("Invalid JSON: " + e.message);
 		}
@@ -34,8 +34,8 @@ describe("Login Testing", () => {
 			}),
 		});
 		expect(response.status).to.equal(400);
-		var json = await response.json();
-		expect(json.message).to.satisfy((string) =>
+		var object = await response.json();
+		expect(object.message).to.satisfy((string) =>
 			["domain", "username", "password"].every((bit) =>
 				string.includes(bit)
 			)

@@ -8,7 +8,8 @@ pipeline {
     }
     environment {
         AWS_SAM_EXISTS = fileExists 'venv/bin/sam'
-        REGION = 'il-central-1'
+        AWS_DEFAULT_REGION = 'il-central-1'
+        AWS_LAMBDA_NAME = 'nikxy-auth'
     }
 
     stages {
@@ -80,22 +81,10 @@ pipeline {
                             usernameVariable: 'accessKeyId',
                             passwordVariable: 'accessKeySecret'
                         )]) {
-                        sh 'echo $accessKeyId'
-                        deployLambda([
-                            alias: '',
-                            artifactLocation: 'deploy.zip',
-                            awsAccessKeyId: accessKeyId,
-                            awsRegion: "${REGION}",
-                            awsSecretKey: accessKeySecret,
-                            deadLetterQueueArn: '',
-                            description: '',
-                            environmentConfiguration: [kmsArn: ''],
-                            functionName: 'nikxy-auth',
-                            handler: '', memorySize: '',
-                            role: '', runtime: '',
-                            securityGroups: '', subnets: '', timeout: '',
-                            updateMode: 'code'
-                        ])
+                            sh '''\
+                            AWS_ACCESS_KEY_ID=${accessKeyId} \
+                            AWS_SECRET_ACCESS_KEY=${accessKeySecret} \
+                            && aws lambda --function-name update-function-code ${AWS_LAMBDA_NAME} --zip-file fileb://deploy.zip  &> ../deploy.log'''
                         }
                     sh 'rm deploy.zip'
                 }

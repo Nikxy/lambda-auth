@@ -50,8 +50,15 @@ describe("Login Testing", () => {
 				password: "invalid",
 			}),
 		});
-		var json = await response.json();
-		expect(json.message).to.equal("Invalid Domain");
+		var json = await response.text();
+		try{
+			var object = JSON.parse(json);
+			expect(object.message).to.equal("Invalid Domain");
+		}
+		catch(e){
+			assert.fail("Invalid JSON: " + e.message + " | " + json);
+		}
+		
 	});
 
 	it("[login]", async () => {});

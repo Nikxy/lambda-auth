@@ -12,14 +12,14 @@ pipeline {
     }
 
     stages {
-        stage('Clone Source') {
+        /*stage('Clone Source') {
             steps {
                 withCredentials([gitUsernamePassword(credentialsId: 'Gogs-Access-Token', gitToolName: 'git-tool')]){
                     git branch: 'master',
                     url: 'https://gogs.dev.callandorit.net/nikxy/lambda-auth.git'
                 }
             }
-        }
+        }*/
         stage('Install dependencies') {
             when {
                 changeset 'src/package.json'

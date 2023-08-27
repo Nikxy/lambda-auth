@@ -1,7 +1,7 @@
 import response from "#utils/response.js";
 
-import routeStatus from './routes/status.js';
 import routeLogin from './routes/login.js';
+import routeStatus from './routes/status.js';
 
 // Check if all env variables are set
 if (process.env.DB_TABLE == undefined) {
@@ -9,7 +9,7 @@ if (process.env.DB_TABLE == undefined) {
 	process.exit(1);
 }
 if (process.env.JWT_SECRET == undefined) {
-	console.error("env JWT_SECRET_KEY not set");
+	console.error("env JWT_SECRET not set");
 	process.exit(1);
 }
 if (process.env.REGION == undefined) {
@@ -20,10 +20,10 @@ if (process.env.REGION == undefined) {
 // Create Lambda Handler
 const handler = async (event, context) => {
 	switch (event.resource){
-		case "/status":
-			return await routeStatus(event);
 		case "/login":
 			return await routeLogin(event);
+		case "/status":
+			return await routeStatus(event);
 		default:
 			return response.BadRequest("Invalid Request");
 	}

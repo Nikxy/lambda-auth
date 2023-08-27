@@ -21,6 +21,9 @@ if (process.env.REGION == undefined) {
 const handler = async (event, context) => {
 	switch (event.resource){
 		case "/login":
+			if(event.httpMethod == "OPTIONS")
+				return response.OK();
+			
 			return await routeLogin(event);
 		case "/status":
 			return await routeStatus(event);

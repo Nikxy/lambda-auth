@@ -10,7 +10,17 @@ describe("Login Testing", () => {
 			"Content-Type": "application/json",
 		},
 	};
-	it("check if responds bad request with json body containing error message", async () => {
+	it ("OPTIONS cors headers", async () => {
+		var response = await fetch(baseUrl, {...baseRequest, method: "OPTIONS"});
+		expect(response.status).to.equal(200);
+
+		expect(response.headers).to.include.members([
+			"access-control-allow-headers",
+			"access-control-allow-methods",
+			"access-control-allow-origin",
+		]);
+	});
+	it("respond bad request with json body containing error message", async () => {
 		var response = await fetch(baseUrl, baseRequest);
 		expect(response.status).to.equal(400);
 
@@ -25,7 +35,7 @@ describe("Login Testing", () => {
 			assert.fail("Invalid JSON: " + e.message);
 		}
 	});
-	it("check if asks for all data", async () => {
+	it("request all data", async () => {
 		var response = await fetch(baseUrl, {
 			...baseRequest,
 			body: JSON.stringify({
@@ -41,7 +51,7 @@ describe("Login Testing", () => {
 			)
 		);
 	});
-	it("check if responds invalid domain", async () => {
+	it("responds invalid domain", async () => {
 		var response = await fetch(baseUrl, {
 			...baseRequest,
 			body: JSON.stringify({
@@ -50,6 +60,7 @@ describe("Login Testing", () => {
 				password: "invalid",
 			}),
 		});
+		expect(response.status).to.equal(400);
 		var json = await response.text();
 		try{
 			var object = JSON.parse(json);

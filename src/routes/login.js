@@ -29,7 +29,8 @@ export default async function (event) {
 		return response.ServerError();
 	}
 	// Check if domain secret is set
-	if (!jwtSecret[data.domain]) return response.BadRequest("Invalid Domain");
+	if (!jwtSecret[data.domain])
+		return response.BadRequest("Invalid Domain");
 
 	const docClient = new DynamoDBClient(initAWSConfig());
 	// Get user from DynamoDB

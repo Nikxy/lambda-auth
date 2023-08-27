@@ -18,6 +18,7 @@ export default async function (event) {
 
 	// Init JWT secret
 	let jwtSecret;
+	console.log("Getting secret: " + process.env.JWT_SECRET)
 	try {
 		jwtSecret = await getSecret(process.env.JWT_SECRET);
 	} catch (e) {

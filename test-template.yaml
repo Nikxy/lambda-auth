@@ -26,6 +26,11 @@ Resources:
           JWT_SECRET: "nikxy/auth/jwtsecrets"
           LOCAL_ENDPOINT: "http://localstack.dev.callandorit.net"
       Events:
+        LoginOptions:
+          Type: Api
+          Properties:
+            Path: /login
+            Method: options
         Login:
           Type: Api
           Properties:

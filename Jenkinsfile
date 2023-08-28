@@ -13,7 +13,7 @@ pipeline {
     }
 
     stages {
-        stage('Install dependencies') {
+        stage('Install npm dependencies') {
             when {
                 changeset 'src/package.json'
             }
@@ -25,6 +25,9 @@ pipeline {
             }
         }
         stage('Unit Tests') {
+            when {
+                changeset 'src/**'
+            }
             steps {
                 dir(SRC_FOLDER) {
                     script {
@@ -38,7 +41,6 @@ pipeline {
             }
         }
         stage('Install AWS SAM') {
-            
             when { expression { AWS_SAM_EXISTS == 'false' } }
             steps {
                 echo 'Installing AWS SAM'
@@ -46,6 +48,9 @@ pipeline {
             }
         }
         stage('SAM Integration Tests') {
+            when {
+                changeset 'src/**'
+            }
             environment
             {
                 TEST_DOMAIN = 'orders'
@@ -69,6 +74,9 @@ pipeline {
             }
         }
         stage('Deploy To AWS') {
+            when {
+                changeset 'src/**'
+            }
             steps {
                 sh 'echo "Deploying to AWS"'
                 dir(SRC_FOLDER) {

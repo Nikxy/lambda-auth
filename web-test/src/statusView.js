@@ -78,6 +78,7 @@ class Status {
 		catch (error) {
 			console.error(error);
 			alert(error.message);
+			Loading.hide();
 			return;
 		}
 		localStorage.setItem("jwt",newJWT);

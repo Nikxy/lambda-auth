@@ -28,7 +28,7 @@ describe("Login Fail Test", () => {
 			"string"
 		);
 		expect(response.headers.get("access-control-allow-methods")).to.equal(
-			"POST,OPTIONS"
+			"GET,POST,OPTIONS"
 		);
 		expect(response.headers.get("access-control-allow-origin")).to.be.a(
 			"string"

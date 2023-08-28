@@ -1,5 +1,3 @@
-import { jwtDecrypt } from "jose";
-
 class Auth {
     BasePath = "https://sam.dev.callandorit.net/";
 

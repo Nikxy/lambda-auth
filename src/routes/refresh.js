@@ -58,7 +58,7 @@ export default async function (event) {
 		return response.Unauthorized("Invalid refresh token");
 
 	// CHECK IF SESSION IS EXPIRED
-	if (session.expires < Date.now())
+	if (session.expires < Date.now() / 1000)
 		return response.Unauthorized("Session expired");
 
 	// REFRESH SESSION

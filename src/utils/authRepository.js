@@ -72,7 +72,7 @@ class Repository {
 	createSession = async (domain, userid,user_ip,user_agent) => {
 		const sessionID = uuidv4();
 		const refreshToken = uuidv4();
-		const dateNow = Date.now();
+		const dateNow = Date.now()/1000;
 
 		try {
 			await this.docClient.send(new PutCommand({

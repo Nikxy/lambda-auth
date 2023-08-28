@@ -19,11 +19,10 @@ if (process.env.REGION == undefined) {
 
 // Create Lambda Handler
 const handler = async (event, context) => {
+	if(event.httpMethod == "OPTIONS")
+		return response.OK();
 	switch (event.resource){
 		case "/login":
-			if(event.httpMethod == "OPTIONS")
-				return response.OK();
-			
 			return await routeLogin(event);
 		case "/status":
 			return await routeStatus(event);

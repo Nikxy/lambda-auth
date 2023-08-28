@@ -2,7 +2,6 @@ import fetch from "node-fetch";
 import { expect, assert } from "chai";
 import { describe, it } from "mocha";
 
-
 describe("Login Testing", () => {
 	const baseUrl = "http://localhost:3000/login";
 	const baseRequest = {
@@ -12,16 +11,31 @@ describe("Login Testing", () => {
 			"Content-Type": "application/json",
 		},
 	};
-	it ("OPTIONS cors headers", async () => {
-		var response = await fetch(baseUrl, {...baseRequest, method: "OPTIONS"});
+	it("OPTIONS cors headers", async () => {
+		var response = await fetch(baseUrl, {
+			...baseRequest,
+			method: "OPTIONS",
+		});
 		expect(response.status).to.equal(200);
 
-		expect(response.headers.get("access-control-allow-headers")).to.be.a("string");
-		expect(response.headers.get("access-control-allow-headers")).to.contain.string("Content-Type");
-		expect(response.headers.get("access-control-allow-methods")).to.be.a("string");
-		expect(response.headers.get("access-control-allow-methods")).to.equal("POST,OPTIONS");
-		expect(response.headers.get("access-control-allow-origin")).to.be.a("string");
-		expect(response.headers.get("access-control-allow-origin")).to.equal("*");
+		expect(response.headers.get("access-control-allow-headers")).to.be.a(
+			"string"
+		);
+		expect(
+			response.headers.get("access-control-allow-headers")
+		).to.contain.string("Content-Type");
+		expect(response.headers.get("access-control-allow-methods")).to.be.a(
+			"string"
+		);
+		expect(response.headers.get("access-control-allow-methods")).to.equal(
+			"POST,OPTIONS"
+		);
+		expect(response.headers.get("access-control-allow-origin")).to.be.a(
+			"string"
+		);
+		expect(response.headers.get("access-control-allow-origin")).to.equal(
+			"*"
+		);
 	});
 	it("respond bad request with json body containing error message", async () => {
 		var response = await fetch(baseUrl, baseRequest);
@@ -65,14 +79,12 @@ describe("Login Testing", () => {
 		});
 		expect(response.status).to.equal(400);
 		var json = await response.text();
-		try{
+		try {
 			var object = JSON.parse(json);
-			expect(object.message).to.equal("Invalid Domain");
-		}
-		catch(e){
+			expect(object.message).to.equal("Invalid domain");
+		} catch (e) {
 			assert.fail("Invalid JSON: " + e.message + " | " + json);
 		}
-		
 	});
 });
 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Test</title>
+	</head>
+	<body>
+		<div id="app" class="contrainer">
+			<div id="loading" class="loader">
+				<div class="lds-ring"><div></div></div>
+			</div>
+			<div id="login">
+				<header>
+					<h1>Login</h1>
+				</header>
+				<main>
+					<div id="login-error" class="error"></div>
+					<form id="login-form">
+						<label for="login-domain">Domain</label>
+						<input
+							type="text"
+							id="login-domain"
+							name="domain"
+							placeholder="Domain"
+							required
+						/>
+						<label for="username">Username</label>
+						<input
+							type="text"
+							id="login-username"
+							name="username"
+							placeholder="Username"
+							required
+						/>
+						<label for="password">Password</label>
+						<input
+							type="password"
+							id="login-password"
+							name="password"
+							placeholder="Password"
+							required
+						/>
+						<input name="submit" type="submit" value="Login" />
+					</form>
+				</main>
+			</div>
+			<div id="status">
+				<header>
+					<h1>Status</h1>
+				</header>
+				<main>
+					<div
+						style="
+							display: grid;
+							grid-template-columns: auto auto auto auto;
+						"
+					>
+						Domain: <span id="status-domain"></span> Username:
+						<span id="status-username"></span> Issued:
+						<span id="status-issued"></span> Exparation:
+						<span id="status-expiry"></span> Expiry:
+						<span id="status-expired"></span>
+
+						<button id="status-refresh-token" disabled>
+							Refresh Token
+						</button>
+						<button id="status-get" style="margin-left: .2rem">
+							Check Status
+						</button>
+					</div>
+					<button id="status-logout">Logout</button>
+				</main>
+			</div>
+		</div>
+		<script type="module" src="/main.js"></script>
+	</body>
+</html>

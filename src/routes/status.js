@@ -1,6 +1,5 @@
 import response from "#utils/response.js";
 import getSecret from "#utils/getSecret.js";
-import repository from "#utils/authRepository.js";
 import jwt from "#utils/jwt.js";
 
 export default async function (event) {

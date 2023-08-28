@@ -46,6 +46,7 @@ class Repository {
 				},
 			})
 		);
+		return refreshToken;
 	};
 }
 

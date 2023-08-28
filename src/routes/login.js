@@ -1,14 +1,12 @@
-import { DynamoDBClient, ScanCommand, PutItemCommand } from "@aws-sdk/client-dynamodb";
-
 import response from "#utils/response.js";
 import getSecret from "#utils/getSecret.js";
-import jwt from "jsonwebtoken";
+import repository from "#utils/authRepository.js";
+import jwt from "#utils/jwt.js";
+
 import bcrypt from "bcryptjs";
-import { v4 as uuidv4 } from "uuid";
-import initAWSConfig from "#utils/initConfig.js";
 
 export default async function (event) {
-    // Init data from request, check if valid
+	// Init data from request, check if valid
 	let data;
 	try {
 		data = initData(event.body);
@@ -16,82 +14,63 @@ export default async function (event) {
 		return response.BadRequest(e.message);
 	}
 
-	// Init JWT secret
-	let jwtSecret;
+	// LOAD JWT SECRET
+	let secrets;
 	try {
-		jwtSecret = await getSecret(process.env.JWT_SECRET);
-	} catch (e) {
-		var message = e.message;
-
-		if (e.$response != undefined)
-			console.error(message + ": " + e.$response.reason);
-		else console.error(message);
+		secrets = await getSecret(process.env.JWT_SECRET);
+	} catch (error) {
+		console.error("Can't get secret:", error);
 		return response.ServerError();
 	}
-	// Check if domain secret is set
-	if (!jwtSecret[data.domain])
-		return response.BadRequest("Invalid Domain");
 
-	const docClient = new DynamoDBClient(initAWSConfig());
-	// Get user from DynamoDB
-	let results;
+	// CHECK IF DOMAIN SECRET IS SET
+	const jwtSecret = secrets[data.domain];
+	if (!jwtSecret) return response.BadRequest("Invalid domain");
+
+	// INIT REPOSITORY
 	try {
-		const command = new ScanCommand({
-			TableName: process.env.DB_TABLE,
-
-			ExpressionAttributeValues: {
-				":typeVal": "user",
-				":name": data.username,
-				":domainVal": data.domain,
-			},
-			FilterExpression:
-				"doc_type = :typeVal and username = :name and doc_domain = :domainVal",
-		});
-
-		results = await docClient.send(command);
+		repository.init();
+	} catch (error) {
+		console.error("Can't init repository:", error.message);
+		return response.ServerError();
+	}
+	let user;
+	try {
+		user = await repository.findUser(data.domain, data.username);
 	} catch (e) {
 		console.error("DB: " + e.message);
 		return response.ServerError();
 	}
-	// Check if user exists
-	if (results.Items.length < 1)
-		return response.BadRequest("Invalid username or password");
-
-	const user = results.Items[0];
-	// Check if password is correct
-	if (!bcrypt.compareSync(data.password, user.password))
+	// Check if domain + username or password is correct
+	if (user == null || !bcrypt.compareSync(data.password, user.password))
 		return response.BadRequest("Invalid username or password");
 
 	// Generate refresh token
-	const refreshToken = uuidv4();
-	const dateNow = Date.now();
-	const command = new PutItemCommand({
-		TableName: process.env.DB_TABLE,
-		Item: {
-			id: refreshToken,
-			doc_type: "token",
-			doc_domain: data.domain,
-			created: dateNow,
-			valid_until: dateNow + 604800, // 7 days
-		},
-	});
+	let sessionID, refreshToken;
+
+	const user_ip = event["requestContext"]["identity"]["sourceIp"];
+	const user_agent = event["requestContext"]["identity"]["userAgent"];
 	try {
-		await docClient.send(command);
+		[sessionID, refreshToken] = await repository.createSession(
+			data.domain,
+			user.id,
+			user_ip,
+			user_agent
+		);
 	} catch (e) {
-		console.error("DB: " + e.message);
+		console.error("DBs: " + e.message);
 		return response.ServerError();
 	}
 
-	const tokenData = {
-		username: user.username,
-		domain: data.domain,
-		refresh_token: refreshToken,
-	};
-	const token = jwt.sign(tokenData, jwtSecret[data.domain], {
-		expiresIn: "5m",
-	});
+	const newJWT = jwt.createJWTToken(
+		jwtSecret,
+		data.domain,
+		user.username,
+		sessionID,
+		refreshToken
+	);
 
-	return response.OK({ token: token });
+	return response.OK({ token: newJWT });
 }
 
 function initData(body) {
@@ -101,8 +80,7 @@ function initData(body) {
 	} catch (e) {
 		throw new Error("Please provide a valid JSON body");
 	}
-	if(data == null)
-		throw new Error("Please provide a valid JSON body");
+	if (data == null) throw new Error("Please provide a valid JSON body");
 
 	if (!data.username || !data.password || !data.domain)
 		throw new Error("Please provide domain,username & password");

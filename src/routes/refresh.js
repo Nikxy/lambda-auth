@@ -64,7 +64,7 @@ export default async function (event) {
 	// REFRESH SESSION
 	let newRefreshToken;
 	try {
-		newRefreshToken = repository.refreshSession(tokenData.session);
+		newRefreshToken = await repository.refreshSession(tokenData.session);
 	} catch (error) {
 		console.error("Can't refresh session:", error);
 		return response.ServerError();

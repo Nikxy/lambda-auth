@@ -62,14 +62,12 @@ export default async function (event) {
 	if (session.expires < Date.now())
 		return response.BadRequest("Session expired");
 
-	// CREATE NEW REFRESH TOKEN
-	const newRefreshToken = uuidv4();
-
-	// UPDATE SESSION WITH NEW REFRESH TOKEN
+	// REFRESH SESSION
+	let newRefreshToken;
 	try {
-		repository.updateSession(tokenData.session, newRefreshToken);
+		newRefreshToken = repository.refreshSession(tokenData.session);
 	} catch (error) {
-		console.error("Can't update session:", error);
+		console.error("Can't refresh session:", error);
 		return response.ServerError();
 	}
 	// CREATE NEW JWT TOKEN

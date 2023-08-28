@@ -5,6 +5,8 @@ import {
 	UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 
+import { v4 as uuidv4 } from "uuid";
+
 import initAWSConfig from "#utils/initConfig.js";
 
 class Repository {
@@ -29,7 +31,8 @@ class Repository {
 
 		return results.Item;
 	};
-	updateSession = async (sessionId, refreshToken) => {
+	refreshSession = async (sessionId) => {
+		let refreshToken = uuidv4();
 		await this.docClient.send(
 			new UpdateCommand({
 				TableName: process.env.DB_TABLE,

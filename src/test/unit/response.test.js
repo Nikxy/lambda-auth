@@ -37,6 +37,18 @@ describe("[util] response", () => {
 			assert.deepEqual(res.body, JSON.stringify(errorData));
 		});
 	});
+	describe("Unauthorized", () => {
+		it("should respond 401 without data", async () => {
+			const res = response.Unauthorized();
+			assert.equal(res.statusCode, 401);
+			assert.equal(res.body, null);
+		});
+		it("should respond 401 with error data", async () => {
+			const res = response.Unauthorized(errorData.message);
+			assert.equal(res.statusCode, 401);
+			assert.deepEqual(res.body, JSON.stringify(errorData));
+		});
+	});
 	describe("ServerError", () => {
 		it("should respond 500 without data", async () => {
 			const res = response.ServerError();

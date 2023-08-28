@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 import { expect, assert } from "chai";
 import { describe, it } from "mocha";
 
-describe("Login Testing", () => {
+describe("Login Fail Test", () => {
 	const baseUrl = "http://localhost:3000/login";
 	const baseRequest = {
 		method: "POST",
@@ -79,13 +79,56 @@ describe("Login Testing", () => {
 		});
 		expect(response.status).to.equal(400);
 		var json = await response.text();
+		let object;
 		try {
-			var object = JSON.parse(json);
-			expect(object.message).to.equal("Invalid domain");
+			object = JSON.parse(json);
 		} catch (e) {
 			assert.fail("Invalid JSON: " + e.message + " | " + json);
 		}
+		expect(object.message).to.equal("Invalid domain");
+	});
+	it("responds invalid user/pass", async () => {
+		if(!process.env.TEST_DOMAIN)
+			assert.fail("TEST_DOMAIN env not set");
+		var response = await fetch(baseUrl, {
+			...baseRequest,
+			body: JSON.stringify({
+				domain: process.env.TEST_DOMAIN,
+				username: "invalid",
+				password: "invalid",
+			}),
+		});
+		expect(response.status).to.equal(400);
+		var json = await response.text();
+		let object;
+		try {
+			object = JSON.parse(json);
+		} catch (e) {
+			assert.fail("Invalid JSON: " + e.message + " | " + json);
+		}
+		expect(object.message).to.equal("Invalid username or password");
+	});
+	it("responds invalid user/pass", async () => {
+		if(!process.env.TEST_DOMAIN)
+			assert.fail("TEST_DOMAIN env not set");
+			if(!process.env.TEST_USERNAME)
+			assert.fail("TEST_USERNAME env not set");
+		var response = await fetch(baseUrl, {
+			...baseRequest,
+			body: JSON.stringify({
+				domain: process.env.TEST_DOMAIN,
+				username: process.env.TEST_USERNAME,
+				password: "invalid",
+			}),
+		});
+		expect(response.status).to.equal(400);
+		var json = await response.text();
+		let object;
+		try {
+			object = JSON.parse(json);
+		} catch (e) {
+			assert.fail("Invalid JSON: " + e.message + " | " + json);
+		}
+		expect(object.message).to.equal("Invalid username or password");
 	});
 });
-
-//process.env.TEST_DOMAIN

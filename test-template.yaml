@@ -40,7 +40,7 @@ Resources:
           Type: Api
           Properties:
             Path: /refresh
-            Method: post
+            Method: get
         Status:
           Type: Api
           Properties:

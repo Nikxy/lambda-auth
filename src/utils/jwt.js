@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 
 export default {
     createJWTToken: (jwtSecret, domain, username, session, refresh_token) => {
-        console.log("createJWTToken ",jwtSecret, domain, username, session, refresh_token)
 		return jwt.sign(
 			{
 				domain,

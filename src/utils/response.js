@@ -9,7 +9,7 @@ class Response {
 	Generate(statusCode, body) {
 		const headers = {
 			"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
-			"Access-Control-Allow-Methods": "POST,OPTIONS",
+			"Access-Control-Allow-Methods": "GET,POST,OPTIONS",
 			"Access-Control-Allow-Origin": "*",
 			"Content-Type": "application/json"
 		};

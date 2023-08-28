@@ -36,16 +36,31 @@ Resources:
           Properties:
             Path: /login
             Method: post
+        RefreshOptions:
+          Type: Api
+          Properties:
+            Path: /refresh
+            Method: options
         Refresh:
           Type: Api
           Properties:
             Path: /refresh
             Method: get
+        StatusOptions:
+          Type: Api
+          Properties:
+            Path: /status
+            Method: options
         Status:
           Type: Api
           Properties:
             Path: /status
             Method: get
+        LogoutOptions:
+          Type: Api
+          Properties:
+            Path: /logout
+            Method: options
         Logout:
           Type: Api
           Properties:

@@ -50,4 +50,4 @@ Resources:
           Type: Api
           Properties:
             Path: /logout
-            Method: post
+            Method: get

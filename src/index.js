@@ -2,6 +2,7 @@ import response from "#utils/response.js";
 
 import routeLogin from './routes/login.js';
 import routeStatus from './routes/status.js';
+import routeRefresh from './routes/refresh.js';
 
 // Check if all env variables are set
 if (process.env.DB_TABLE == undefined) {
@@ -22,10 +23,12 @@ const handler = async (event, context) => {
 	if(event.httpMethod == "OPTIONS")
 		return response.OK();
 	switch (event.resource){
-		case "/login":
+		case "/login":			
 			return await routeLogin(event);
 		case "/status":
 			return await routeStatus(event);
+		case "/refresh":
+			return await routeRefresh(event);
 		default:
 			return response.BadRequest("Invalid Request");
 	}

@@ -10,7 +10,7 @@ export default async function (event) {
 	try {
 		tokenData = initData(event.headers);
 	} catch (e) {
-		return response.BadRequest(e.message);
+		return response.Unauthorized(e.message);
 	}
 
 	// LOAD JWT SECRET
@@ -24,12 +24,12 @@ export default async function (event) {
 
 	// CHECK IF DOMAIN SECRET IS SET
 	const jwtSecret = secrets[tokenData.domain];
-	if (!jwtSecret) return response.BadRequest("Invalid domain");
+	if (!jwtSecret) return response.Unauthorized("Invalid domain");
 
 	// VERIFY JWT
     const jwtStatus = jwt.validateJWT(jwtSecret,tokenData.jwt);
     if(!jwtStatus.valid)
-        return response.BadRequest("Invalid token");
+        return response.Unauthorized("Invalid token");
 
 	// INIT REPOSITORY
 	try {
@@ -50,16 +50,16 @@ export default async function (event) {
 
 	// CHECK IF SESSION EXISTS
 	if (session == null || session.doc_domain != tokenData.domain){
-		return response.BadRequest("Invalid session");
+		return response.Unauthorized("Invalid session");
     }
 
 	// CHECK IF REFRESH TOKEN IS VALID
 	if (session.refresh_token != tokenData.refresh_token)
-		return response.BadRequest("Invalid refresh token");
+		return response.Unauthorized("Invalid refresh token");
 
 	// CHECK IF SESSION IS EXPIRED
 	if (session.expires < Date.now())
-		return response.BadRequest("Session expired");
+		return response.Unauthorized("Session expired");
 
 	// REFRESH SESSION
 	let newRefreshToken;

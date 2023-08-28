@@ -8,7 +8,7 @@ export default async function (event) {
 	try {
 		tokenData = initData(event.headers);
 	} catch (e) {
-		return response.BadRequest(e.message);
+		return response.Unauthorized(e.message);
 	}
 
 	// LOAD JWT SECRET
@@ -22,11 +22,11 @@ export default async function (event) {
 
 	// CHECK IF DOMAIN SECRET IS SET
 	const jwtSecret = secrets[tokenData.domain];
-	if (!jwtSecret) return response.BadRequest("Invalid domain");
+	if (!jwtSecret) return response.Unauthorized("Invalid domain");
 
 	// VERIFY JWT
 	const jwtStatus = jwt.validateJWT(jwtSecret, tokenData.jwt);
-	if (!jwtStatus.valid) return response.BadRequest("Invalid token");
+	if (!jwtStatus.valid) return response.Unauthorized("Invalid token");
 
 	const remainingSeconds = tokenData.exp - Math.floor(Date.now() / 1000);
 	const remainingMinutes = Math.floor(remainingSeconds / 60);

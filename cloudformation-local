@@ -1,0 +1,87 @@
+#!/bin/bash
+
+# Variables
+localstackContainerName="callandor-localstack"
+localstackEndpoint="http://localstack.dev.callandorit.net"
+stackName="nikxy-auth"
+s3BucketName="nikxy-cloudformation"
+s3LambdaKey="lambda/auth-service.zip"
+
+# Colors
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+# http://k6a40ff6vf.execute-api.localstack.dev.callandorit.net/prod/login
+echo '===================================='
+echo '==== Local CloudFormation Stack ===='
+echo '= Stack name: '$stackName
+echo '= Endpoint: '$localstackEndpoint
+echo '= Container name: '$localstackContainerName
+echo '= Container status: '$(docker inspect -f '{{.State.Status}}' $localstackContainerName)
+echo '===================================='
+
+
+aws_endpointed(){
+    aws "$@" --endpoint-url "$localstackEndpoint"
+}
+
+try_command(){
+    result=`"$@" 2>&1` \
+    && echo -e "${GREEN}Done.${NC}" \
+    || echo -e "${RED}Failed: ${result##$'\n'}${NC}"
+}
+
+while true
+do
+    echo -n '> '
+    read cmd
+    case $cmd in
+        localstack-reset)
+            echo -n "Restarting localstack... "
+            try_command docker restart $localstackContainerName
+            ;;
+        stack-status)
+            result=`aws_endpointed cloudformation describe-stacks --stack-name $stackName`
+            sed -n '/StackStatus/,$p' <<< "$result"
+            ;;
+        stack-create)
+            aws_endpointed cloudformation create-stack --stack-name $stackName --template-body file://cloudformation.yml
+            ;;
+        stack-update)
+            aws_endpointed cloudformation update-stack --stack-name $stackName --template-body file://cloudformation.yml
+            ;;
+        stack-delete)
+            try_command aws_endpointed cloudformation delete-stack --stack-name $stackName
+            ;;
+        s3-create)
+            try_command aws_endpointed s3 mb s3://$s3BucketName
+            ;;
+        lambda-s3)
+            cd ./src
+            echo -n "Creating Zip... "
+            try_command zip -r ../deploy.zip * -x ./test/\* ./node_modules/@aws-crypto/\* ./node_modules/@aws-sdk\*
+            cd ..
+            echo -n "Uploading to S3... "
+            try_command aws_endpointed s3 cp deploy.zip s3://$s3BucketName/$s3LambdaKey
+            echo -n "Removing Zip... "
+            try_command rm deploy.zip
+            ;;
+        help)
+            echo 'Commands:'
+            echo '  localstack-reset - reset localstack container & data'
+            echo '  stack-status     - get stack status'
+            echo '  stack-create     - create stack'
+            echo '  stack-delete     - delete stack'
+            echo '  exit             - exit this shell'
+            ;;
+        exit)
+            break;
+            ;;
+        *)
+            echo 'Invalid command.'
+            ;;
+    esac
+done
+
+echo '===================================='

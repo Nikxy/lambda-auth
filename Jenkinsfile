@@ -12,6 +12,13 @@ pipeline {
     }
 
     stages {
+        stage('Install AWS SAM') {
+            when { expression { AWS_SAM_EXISTS == 'false' } }
+            steps {
+                echo 'Installing AWS SAM'
+                sh(returnStdout:true, script: 'python3 -m venv venv && venv/bin/pip install aws-sam-cli')
+            }
+        }
         stage('Install npm dependencies') {
             when {
                 changeset 'src/package.json'
@@ -37,13 +44,6 @@ pipeline {
                         }
                     }
                 }
-            }
-        }
-        stage('Install AWS SAM') {
-            when { expression { AWS_SAM_EXISTS == 'false' } }
-            steps {
-                echo 'Installing AWS SAM'
-                sh(returnStdout:true, script: 'python3 -m venv venv && venv/bin/pip install aws-sam-cli')
             }
         }
         stage('SAM Integration Tests') {

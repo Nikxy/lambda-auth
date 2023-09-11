@@ -19,17 +19,22 @@ pipeline {
                 sh(returnStdout:true, script: 'python3 -m venv venv && venv/bin/pip install aws-sam-cli')
             }
         }
-        stage('Install npm dependencies') {
+        stage('Install src npm dependencies') {
             when {
-                changeset 'src/package.json'
+                anyOf { changeset 'src/package.json'; changeset 'src/package-lock.json' }
             }
-
             steps {
-                dir(SRC_FOLDER) {
+                dir(SRC_FOLDER) { sh 'npm ci' }
+            }
+        }
+        stage('Install test npm dependencies') {
+            when {
+                anyOf { changeset './package.json'; changeset './package-lock.json' }
+            }
+            steps {
                     sh 'npm ci'
                 }
             }
-        }
         stage('Unit Tests') {
             when {
                 changeset 'src/**'

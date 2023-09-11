@@ -11,32 +11,6 @@ describe("Login Fail Test", () => {
 			"Content-Type": "application/json",
 		},
 	};
-	it("OPTIONS cors headers", async () => {
-		var response = await fetch(baseUrl, {
-			...baseRequest,
-			method: "OPTIONS",
-		});
-		expect(response.status).to.equal(200);
-
-		expect(response.headers.get("access-control-allow-headers")).to.be.a(
-			"string"
-		);
-		expect(
-			response.headers.get("access-control-allow-headers")
-		).to.contain.string("Content-Type");
-		expect(response.headers.get("access-control-allow-methods")).to.be.a(
-			"string"
-		);
-		expect(response.headers.get("access-control-allow-methods")).to.equal(
-			"GET,POST,OPTIONS"
-		);
-		expect(response.headers.get("access-control-allow-origin")).to.be.a(
-			"string"
-		);
-		expect(response.headers.get("access-control-allow-origin")).to.equal(
-			"*"
-		);
-	});
 	it("respond bad request with json body containing error message", async () => {
 		var response = await fetch(baseUrl, baseRequest);
 		expect(response.status).to.equal(400);

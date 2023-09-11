@@ -77,12 +77,13 @@ class Status {
 		}
 		catch (error) {
 			console.error(error);
-			alert(error.message);
 			return;
+		}
+		finally {
+			Loading.hide();
 		}
 		localStorage.setItem("jwt",newJWT);
 		this.update();
-		Loading.hide();
 	};
 
 	
@@ -94,11 +95,12 @@ class Status {
 		}
 		catch (error) {
 			console.error(error);
-			alert(error.message);
 			return;
 		}
+		finally {
+			Loading.hide();
+		}
 		console.log(status);
-		Loading.hide();
 	}
 }
 export default new Status();

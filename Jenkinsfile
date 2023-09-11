@@ -9,7 +9,6 @@ pipeline {
     environment {
         AWS_SAM_EXISTS = fileExists 'venv/bin/sam'
         AWS_DEFAULT_REGION = 'il-central-1'
-        AWS_LAMBDA_NAME = 'nikxy-auth'
     }
 
     stages {
@@ -56,7 +55,6 @@ pipeline {
                 TEST_DOMAIN = 'orders'
                 TEST_USERNAME = 'orders'
                 TEST_PASSWORD = '0SdoPPhVztwbuSt2lTgv'
-                REGION = 'eu-central-1'
             }
             steps {
                 sh 'chmod +x sam-start-ci.sh'
@@ -74,24 +72,17 @@ pipeline {
             }
         }
         stage('Deploy To AWS') {
-            when {
-                changeset 'src/**'
-            }
             steps {
                 sh 'echo "Deploying to AWS"'
-                dir(SRC_FOLDER) {
-
-                    sh (returnStdout:true,
-                        script: 'zip -r deploy.zip * -x ./test**\\* -x ./node_modules/@aws-sdk**\\* -x ./node_modules/@aws-crypto**\\*')
-                    withCredentials([
-                        usernamePassword(
-                            credentialsId: 'AWSJenkinsDeploy',
-                            usernameVariable: 'AWS_ACCESS_KEY_ID',
-                            passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-                        )]) {
-                            sh 'aws lambda update-function-code --function-name ${AWS_LAMBDA_NAME} --zip-file fileb://deploy.zip'
-                        }
-                    sh 'rm deploy.zip'
+                withCredentials([usernamePassword(
+                        credentialsId: 'AWSJenkinsDeploy',
+                        usernameVariable: 'AWS_ACCESS_KEY_ID',
+                        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                    )]) {
+                        sh 'venv/bin/sam deploy --stack-name nikxy-auth --region ${AWS_DEFAULT_REGION} \
+                            --s3-bucket nikxy-cloudformation --s3-prefix sam-nikxy-auth \
+                            --on-failure ROLLBACK --capabilities CAPABILITY_NAMED_IAM'
+                    }
                 }
             }
         }

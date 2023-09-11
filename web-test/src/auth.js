@@ -1,5 +1,6 @@
 class Auth {
-    BasePath = "https://sam.dev.callandorit.net/";
+    //BasePath = "https://sam.dev.callandorit.net/";
+    BasePath = "https://auth.nikxy.dev/";
 
     Login = async (domain,username, password) => {
         const data = {

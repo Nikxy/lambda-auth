@@ -74,24 +74,17 @@ pipeline {
             }
         }
         stage('Deploy To AWS') {
-            when {
-                changeset 'src/**'
-            }
             steps {
                 sh 'echo "Deploying to AWS"'
-                dir(SRC_FOLDER) {
-
-                    sh (returnStdout:true,
-                        script: 'zip -r deploy.zip * -x ./test**\\* -x ./node_modules/@aws-sdk**\\* -x ./node_modules/@aws-crypto**\\*')
-                    withCredentials([
-                        usernamePassword(
+                withCredentials([usernamePassword(
                             credentialsId: 'AWSJenkinsDeploy',
                             usernameVariable: 'AWS_ACCESS_KEY_ID',
                             passwordVariable: 'AWS_SECRET_ACCESS_KEY'
                         )]) {
-                            sh 'aws lambda update-function-code --function-name ${AWS_LAMBDA_NAME} --zip-file fileb://deploy.zip'
+                        sh 'venv/bin/sam deploy --stack-name nikxy-auth --region ${AWS_DEFAULT_REGION} \
+                            --s3-bucket nikxy-cloudformation --s3-prefix sam-nikxy-auth \
+                            --on-failure ROLLBACK --capabilities CAPABILITY_NAMED_IAM'
                         }
-                    sh 'rm deploy.zip'
                 }
             }
         }

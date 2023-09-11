@@ -2,6 +2,15 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: >-
   Template for an auth service
 Parameters:
+  EnvironmentType:
+    Type: String
+    Description: The environment of the service
+    Default: prod
+    AllowedValues:
+      - prod
+      - test
+      - localstack
+    ConstraintDescription: Must specify prod or test.
   ServiceName:
     Type: String
     Description: The name of the service
@@ -26,6 +35,13 @@ Parameters:
     Type: String
     Description: The S3 key where the lambda zip is stored
     Default: lambda/auth-service.zip
+Conditions:
+  ProductionEnvironment: !Equals 
+    - !Ref EnvironmentType
+    - prod
+  TestEnvironment: !Equals 
+    - !Ref EnvironmentType
+    - test
 Resources:
   JWTSecrets:
     Type: AWS::SecretsManager::Secret
@@ -100,8 +116,9 @@ Resources:
                   - dynamodb:UpdateItem
                 Resource: !GetAtt DynamoDBTable.Arn
 
-  Lambda:
+  Lambda: # Production Lambda
     Type: AWS::Lambda::Function
+    Condition: ProductionEnvironment
     Properties:
       Description: Auth service lambda function
       FunctionName: !Ref ServiceName
@@ -121,6 +138,30 @@ Resources:
     DependsOn:
       - JWTSecrets
       - DynamoDBTable
+
+  Lambda: # Integration testing Lambda
+    Type: AWS::Lambda::Function
+    Condition: TestEnvironment
+    Properties:
+      Description: Auth service lambda function
+      FunctionName: !Ref ServiceName
+      Architectures:
+        - x86_64
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Role: !GetAtt LambdaRole.Arn
+      Code:
+        S3Bucket: !Ref LambdaZipS3Bucket
+        S3Key: !Ref LambdaZipS3Key
+      Environment:
+        Variables:
+          DB_TABLE: !Ref ServiceName
+          JWT_SECRET: !Ref JWTSecretsKey
+          REGION: !Ref AWS::Region
+          LOCAL_ENDPOINT: "http://localstack.dev.callandorit.net"
+    Metadata:
+        aws:asset:path: "./src"
+        aws:asset:property: "Code"
 
   LambdaInvoke:
     Type: AWS::Lambda::Permission

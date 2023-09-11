@@ -1,4 +1,4 @@
-sam local start-api -t cloudformation.yml \
+sam local start-api \
 --region il-central-1 \
 --parameter-overrides ParameterKey=EnvironmentType,ParameterValue=test \
 --docker-network ssl-proxy \

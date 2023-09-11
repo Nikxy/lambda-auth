@@ -59,7 +59,7 @@ pipeline {
             steps {
                 sh 'chmod +x sam-start-ci.sh'
                 sh 'nohup ./sam-start-ci.sh > $WORKSPACE/sam.log 2>&1 &'
-                sh 'sleep 3'
+                sh 'sleep 5'
                 dir(SRC_FOLDER) {
                     script {
                         def exitStatus = sh returnStatus: true, script: 'npm run test_ci:integration'

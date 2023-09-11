@@ -4,5 +4,4 @@ venv/bin/sam local start-api \
 --docker-network ssl-proxy \
 --container-host 172.17.0.1 \
 --container-host-interface 0.0.0.0 \
---warm-containers EAGER \
--v /home/diana/dev/jenkins_workspace/auth.nikxy.dev
+--warm-containers EAGER

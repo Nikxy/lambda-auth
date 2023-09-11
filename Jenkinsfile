@@ -37,7 +37,7 @@ pipeline {
             }
         stage('Unit Tests') {
             when {
-                changeset 'src/**'
+                anyOf { changeset 'src/**'; changeset 'tests/unit/**'; changeset 'Jenkinsfile' }
             }
             steps {
                 dir(SRC_FOLDER) {
@@ -53,7 +53,7 @@ pipeline {
         }
         stage('SAM Integration Tests') {
             when {
-                changeset 'src/**'
+                anyOf { changeset 'src/**'; changeset 'tests/integration/**'; changeset 'Jenkinsfile' }
             }
             environment
             {

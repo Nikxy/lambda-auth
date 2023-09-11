@@ -17,7 +17,6 @@ if (process.env.REGION == undefined) {
 	console.error("env REGION not set");
 	process.exit(1);
 }
-
 // Create Lambda Handler
 const handler = async (event) => {
 	if(event.httpMethod == "OPTIONS")

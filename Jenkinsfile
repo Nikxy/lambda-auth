@@ -7,6 +7,8 @@ pipeline {
         nodejs 'Node 18.x'
     }
     environment {
+        TEST_NODE_MODULES_EXISTS = fileExists 'node_modules'
+        SRC_NODE_MODULES_EXISTS = fileExists 'src/node_modules'
         AWS_SAM_EXISTS = fileExists 'venv/bin/sam'
         AWS_DEFAULT_REGION = 'il-central-1'
     }
@@ -19,20 +21,28 @@ pipeline {
                 sh(returnStdout:true, script: 'python3 -m venv venv && venv/bin/pip install aws-sam-cli')
             }
         }
-        stage('Install src npm dependencies') {
-            when {
-                anyOf { changeset 'src/package.json'; changeset 'src/package-lock.json' }
-            }
-            steps {
-                dir(SRC_FOLDER) { sh 'npm ci' }
-            }
-        }
         stage('Install test npm dependencies') {
             when {
-                anyOf { changeset 'package.json'; changeset 'package-lock.json' }
+                anyOf {
+                    changeset 'package.json';
+                    changeset 'package-lock.json';
+                    expression { TEST_NODE_MODULES_EXISTS == 'false' }
+                }
             }
             steps {
                 sh 'npm ci'
+            }
+        }
+        stage('Install src npm dependencies') {
+            when {
+                anyOf {
+                    changeset 'src/package.json';
+                    changeset 'src/package-lock.json';
+                    expression { SRC_NODE_MODULES_EXISTS == 'false' }
+                }
+            }
+            steps {
+                dir(SRC_FOLDER) { sh 'npm ci' }
             }
         }
         stage('Unit Tests') {

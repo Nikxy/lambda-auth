@@ -72,6 +72,9 @@ pipeline {
             }
         }
         stage('Deploy To AWS') {
+            when {
+                anyOf { changeset 'src/**'; changeset 'template.yaml'}
+            }
             steps {
                 sh 'echo "Deploying to AWS"'
                 withCredentials([usernamePassword(

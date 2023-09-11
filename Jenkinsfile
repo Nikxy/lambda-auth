@@ -32,9 +32,9 @@ pipeline {
                 anyOf { changeset './package.json'; changeset './package-lock.json' }
             }
             steps {
-                    sh 'npm ci'
-                }
+                sh 'npm ci'
             }
+        }
         stage('Unit Tests') {
             when {
                 anyOf { changeset 'src/**'; changeset 'tests/unit/**'; changeset 'Jenkinsfile' }
@@ -55,12 +55,7 @@ pipeline {
             when {
                 anyOf { changeset 'src/**'; changeset 'tests/integration/**'; changeset 'Jenkinsfile' }
             }
-            environment
-            {
-                TEST_DOMAIN = 'orders'
-                TEST_USERNAME = 'orders'
-                TEST_PASSWORD = '0SdoPPhVztwbuSt2lTgv'
-            }
+            
             steps {
                 sh 'chmod +x sam-start-ci.sh'
                 sh 'nohup ./sam-start-ci.sh > $WORKSPACE/sam.log 2>&1 &'
@@ -76,6 +71,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Deploy To AWS') {
             when {
                 anyOf { changeset 'src/**'; changeset 'template.yaml'}

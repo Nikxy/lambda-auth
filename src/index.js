@@ -19,7 +19,7 @@ if (process.env.REGION == undefined) {
 }
 
 // Create Lambda Handler
-const handler = async (event, context) => {
+const handler = async (event) => {
 	if(event.httpMethod == "OPTIONS")
 		return response.OK();
 	switch (event.resource){

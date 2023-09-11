@@ -65,9 +65,11 @@ pipeline {
             }
 
             steps {
-                sh 'nohup venv/bin/sam $(<$WORKSPACE/sam-api-arguments.sh) > $WORKSPACE/sam.log 2>&1 &'
-                sh 'sleep 10'
                 script {
+                    def sam_arguments = readFile "${WORKSPACE}/sam-api-arguments.sh"
+                    sh 'nohup venv/bin/sam '+sam_arguments+' > $WORKSPACE/sam.log 2>&1 &'
+                    sh 'sleep 10'
+
                     def exitStatus = sh returnStatus: true, script: 'npm run test_ci:integration'
                     junit 'junit-integration.xml'
                     if (exitStatus != 0) {

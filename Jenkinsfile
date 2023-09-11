@@ -81,7 +81,8 @@ pipeline {
                 )]) {
                     sh 'venv/bin/sam deploy --stack-name nikxy-auth --region ${AWS_DEFAULT_REGION} \
                         --s3-bucket nikxy-cloudformation --s3-prefix sam-nikxy-auth \
-                        --on-failure ROLLBACK --capabilities CAPABILITY_NAMED_IAM'
+                        --on-failure ROLLBACK --capabilities CAPABILITY_NAMED_IAM \
+                        --no-progressbar'
                 }
             }
         }

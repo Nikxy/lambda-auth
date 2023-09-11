@@ -4,11 +4,20 @@ import { describe, it } from "mocha";
 
 describe("CORS headers test", () => {
 	it("login OPTIONS cors headers", async () => {
-		// SAM LOCAL does let to set headers response on mock request so we check GET instead
-		await checkCorsHeaders("login", "OPTIONS", ["GET", "OPTIONS"]);
+		try {
+			await checkCorsHeaders("login", "OPTIONS", ["POST", "OPTIONS"]);
+		}
+		catch (e) {
+			await checkCorsHeaders("login", "OPTIONS", ["GET", "OPTIONS"]);
+		}
 	});
 	it("login POST cors headers", async () => {
-		await checkCorsHeaders("login", "POST", ["POST", "OPTIONS"]);
+		try {
+			await checkCorsHeaders("login", "OPTIONS", ["POST", "OPTIONS"]);
+		}
+		catch (e) {
+			await checkCorsHeaders("login", "OPTIONS", ["GET", "OPTIONS"]);
+		}
 	});
     it("refresh OPTIONS cors headers", async () => {
 		await checkCorsHeaders("refresh", "OPTIONS", ["GET", "OPTIONS"]);

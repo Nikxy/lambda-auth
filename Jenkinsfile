@@ -29,7 +29,7 @@ pipeline {
         }
         stage('Install test npm dependencies') {
             when {
-                anyOf { changeset './package.json'; changeset './package-lock.json' }
+                anyOf { changeset 'package.json'; changeset 'package-lock.json' }
             }
             steps {
                 sh 'npm ci'

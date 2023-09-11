@@ -1,0 +1,31 @@
+{
+	"name": "jwt-login-lambda-tests",
+	"version": "1.0.0",
+	"description": "",
+	"type": "module",
+	"scripts": {
+		"test": "npm run test:unit && npm run test:integration",
+		"test:unit": "mocha ./tests/unit",
+		"test:integration": "export $(cat ./test.env | xargs) && mocha ./tests/integration -t 10000",
+		"test_ci:unit": "mocha ./tests/unit --reporter mocha-junit-reporter --reporter-options mochaFile=./junit.xml",
+		"test_ci:integration": "export $(cat ./test.env | xargs) && mocha ./tests/integration -t 60000 --reporter mocha-junit-reporter --reporter-options mochaFile=./junit-integration.xml"
+	},
+	"author": "Nikxy",
+	"license": "ISC",
+	"dependencies": {
+		"@aws-sdk/client-dynamodb": "^3.395.0",
+		"@aws-sdk/client-secrets-manager": "^3.395.0",
+		"bcryptjs": "^2.4.3",
+		"jsonwebtoken": "^9.0.1",
+		"uuid": "^9.0.0"
+	},
+	"devDependencies": {
+		"chai": "^4.3.7",
+		"mocha": "^10.2.0",
+		"mocha-junit-reporter": "^2.2.1",
+		"node-fetch": "^3.3.2"
+	},
+	"imports": {
+		"#utils/*": "./src/utils/*"
+	}
+}

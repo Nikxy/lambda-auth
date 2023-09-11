@@ -6,6 +6,4 @@ Auth Service in Lambda With DynamoDB
 
 * Check if localstack is up, populate localstack with ./localstack/populate.sh script
 * Start AWS SAM with ./sam-start.sh script
-* cd into src & run npm test
-OR
-* use web-test
+* run npm test or use web-test

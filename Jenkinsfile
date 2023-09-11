@@ -65,7 +65,7 @@ pipeline {
             }
 
             steps {
-                sh 'nohup venv/bin/sam $(<$WORKSPACE/sam-local-api-arguments.sh) > $WORKSPACE/sam.log 2>&1 &'
+                sh 'nohup venv/bin/sam $(<$WORKSPACE/sam-api-arguments.sh) > $WORKSPACE/sam.log 2>&1 &'
                 sh 'sleep 10'
                 script {
                     def exitStatus = sh returnStatus: true, script: 'npm run test_ci:integration'

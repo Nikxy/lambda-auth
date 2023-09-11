@@ -6,7 +6,7 @@ secretData=$(<test-secret.json)
 
 localstackEndpoint="http://localstack.dev.callandorit.net"
 tableName="nikxy-auth"
-secretName="nikxy/auth/jwtsecrets"
+secretName="nikxy-auth/secrets"
 
 # Colors
 GREEN='\033[0;32m'

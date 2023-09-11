@@ -40,13 +40,11 @@ pipeline {
                 anyOf { changeset 'src/**'; changeset 'tests/unit/**'; changeset 'Jenkinsfile' }
             }
             steps {
-                dir(SRC_FOLDER) {
-                    script {
-                        def exitStatus = sh returnStatus: true, script: 'npm run test_ci:unit'
-                        junit 'junit.xml'
-                        if (exitStatus != 0) {
-                            error 'Unit tests failed'
-                        }
+                script {
+                    def exitStatus = sh returnStatus: true, script: 'npm run test_ci:unit'
+                    junit 'junit.xml'
+                    if (exitStatus != 0) {
+                        error 'Unit tests failed'
                     }
                 }
             }
@@ -55,18 +53,16 @@ pipeline {
             when {
                 anyOf { changeset 'src/**'; changeset 'tests/integration/**'; changeset 'Jenkinsfile' }
             }
-            
+
             steps {
                 sh 'chmod +x sam-start-ci.sh'
                 sh 'nohup ./sam-start-ci.sh > $WORKSPACE/sam.log 2>&1 &'
                 sh 'sleep 10'
-                dir(SRC_FOLDER) {
-                    script {
-                        def exitStatus = sh returnStatus: true, script: 'npm run test_ci:integration'
-                        junit 'junit-integration.xml'
-                        if (exitStatus != 0) {
-                            error 'Integration tests failed'
-                        }
+                script {
+                    def exitStatus = sh returnStatus: true, script: 'npm run test_ci:integration'
+                    junit 'junit-integration.xml'
+                    if (exitStatus != 0) {
+                        error 'Integration tests failed'
                     }
                 }
             }

@@ -1,6 +1,8 @@
 # Lambda Auth Service
 Auth Service in Lambda With DynamoDB
 
+![Service Diagram](diagram.svg)
+
 
 ### Local Testing
 

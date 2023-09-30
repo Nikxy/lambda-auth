@@ -3,7 +3,7 @@ export default function () {
 	const config = { region: process.env.REGION };
 
     // Check if local endpoint provided and apply it
-	if (process.env.LOCAL_ENDPOINT && process.env.LOCAL_ENDPOINT != false) {
+	if (process.env.LOCAL_ENDPOINT && process.env.LOCAL_ENDPOINT != "false") {
 		console.log('Local endpoint provided, using it instead of AWS');
 		config.endpoint = process.env.LOCAL_ENDPOINT;
 		config.credentials = {

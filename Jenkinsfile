@@ -68,7 +68,8 @@ pipeline {
                 script {
                     def sam_arguments = readFile "${WORKSPACE}/sam-api-arguments.sh"
                     sh 'nohup venv/bin/sam '+sam_arguments+' -v /home/diana/dev/jenkins_workspace/auth.nikxy.dev > $WORKSPACE/sam.log 2>&1 &'
-                    sh 'while [[ $(tail -n 1 sam.log) != *"CTRL+C"* ]]; do echo waiting && sleep 1; done'
+                    sh '''#!/bin/bash
+                        while [[ $(tail -n 1 sam.log) != *"CTRL+C"* ]]; do echo "waiting for sam" && sleep 1; done'''
 
                     def exitStatus = sh returnStatus: true, script: 'npm run test_ci:integration'
                     junit 'junit-integration.xml'

@@ -1,11 +1,16 @@
 #!/bin/bash
+if [ -z "$1" ]
+  then
+    echo "Please provide the localstack endpoint as the first argument."
+    exit 1
+fi
 
 cd "$(dirname "$0")"
 
 userData=$(<test-user.json)
 secretData=$(<test-secret.json)
 
-localstackEndpoint="http://localstack.dev.callandorit.net"
+localstackEndpoint="$1"
 tableName="auth-test"
 secretName="auth-test/secrets"
 

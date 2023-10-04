@@ -76,24 +76,26 @@ pipeline {
                 script {
                     def sam_arguments = readFile "${WORKSPACE}/sam-api-arguments.sh"
 
-                    sh '''
-                        nohup venv/bin/sam '+sam_arguments+' \
+                    sh """nohup venv/bin/sam '+sam_arguments+' \
                         --region $LOCALSTACK_TESTING_REGION -v $DOCKER_HOST_WORKSPACE \
-                        --parameter-overrides EnvironmentType=test LocalStack=$LOCALSTACK_URL TableName=auth-test JWTSecretsKey=auth-test/secrets > $WORKSPACE/sam.log 2>&1 &
-                    '''
-                    sh '''#!/bin/bash
+                        --parameter-overrides EnvironmentType=test LocalStack=$LOCALSTACK_URL \
+                        > $WORKSPACE/sam.log 2>&1 &"""
+                    def waitStatus = sh returnStatus: true, script:  '''#!/bin/bash
                         time=0
                         while [[ $(tail -n 1 sam.log) != *"CTRL+C"* ]]
                         do 
                             echo "waiting for sam"
                             sleep 1
                             if((time > 30)); then
-                                echo "sam timeout"
                                 exit 1
                             fi
                             time=$((time+1))
                         done
                     '''
+                    if(waitStatus != 0){
+                        error 'Sam Timeout'
+                    }
+
 
                     def exitStatus = sh returnStatus: true, script: 'npm run test_ci:integration'
                     junit 'junit-integration.xml'

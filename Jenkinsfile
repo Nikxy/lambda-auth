@@ -10,7 +10,7 @@ pipeline {
         TEST_NODE_MODULES_EXISTS = fileExists 'node_modules'
         SRC_NODE_MODULES_EXISTS = fileExists 'src/node_modules'
         AWS_SAM_EXISTS = fileExists 'venv/bin/sam'
-        AWS_DEFAULT_REGION = 'il-central-1'
+        AWS_DEPLOY_REGION = 'il-central-1'
         // Location of the workspace on the docker host machine
         DOCKER_HOST_WORKSPACE = '/home/diana/dev/jenkins_workspace/auth.nikxy.dev'
         STACK_NAME = 'nikxy-auth'
@@ -96,7 +96,7 @@ pipeline {
                     usernameVariable: 'AWS_ACCESS_KEY_ID',
                     passwordVariable: 'AWS_SECRET_ACCESS_KEY'
                 )]) {
-                    sh 'venv/bin/sam deploy --stack-name $STACK_NAME --region ${AWS_DEFAULT_REGION} \
+                    sh 'venv/bin/sam deploy --stack-name $STACK_NAME --region ${AWS_DEPLOY_REGION} \
                         --s3-bucket $SAM_S3 --s3-prefix sam-$STACK_NAME \
                         --on-failure ROLLBACK --capabilities CAPABILITY_NAMED_IAM \
                         --no-progressbar'

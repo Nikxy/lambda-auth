@@ -91,7 +91,7 @@ pipeline {
                                 echo "sam timeout"
                                 exit 1
                             fi
-                            $time++
+                            time=$((time+1))
                         done
                     '''
 

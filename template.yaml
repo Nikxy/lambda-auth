@@ -10,9 +10,6 @@ Parameters:
       - prod
       - test
     ConstraintDescription: Must specify prod or test.
-  ServiceName:
-    Type: String
-    Description: The name of the service
   Domain:
     Type: String
     Description: The domain name of the service
@@ -45,7 +42,7 @@ Resources:
     Type: AWS::DynamoDB::Table
     Condition: ProductionEnvironment
     Properties:
-      TableName: !Ref ServiceName
+      TableName: !Ref AWS::StackName
       AttributeDefinitions:
         - AttributeName: id
           AttributeType: S
@@ -64,7 +61,7 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       Path: "/"
-      RoleName: !Sub "${ServiceName}-lambda"
+      RoleName: !Sub "${AWS::StackName}-lambda"
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -111,7 +108,7 @@ Resources:
     Condition: ProductionEnvironment
     Properties:
       Description: Auth service lambda function
-      FunctionName: !Ref ServiceName
+      FunctionName: !Ref AWS::StackName
       Timeout: 10
       Architectures:
         - !If [ProductionEnvironment,arm64,x86_64]
@@ -120,7 +117,7 @@ Resources:
       Role: !GetAtt LambdaRole.Arn
       Environment:
         Variables:
-          DB_TABLE: !Ref ServiceName
+          DB_TABLE: !Ref AWS::StackName
           JWT_SECRET: !Ref JWTSecretsKey
           REGION: !Ref AWS::Region
           LOCAL_ENDPOINT: !Ref LocalStack
@@ -140,7 +137,7 @@ Resources:
     Type: AWS::ApiGateway::RestApi
     
     Properties:
-      Name: !Ref ServiceName
+      Name: !Ref AWS::StackName
       Description: API Gateway for the auth service
       EndpointConfiguration:
         Types:

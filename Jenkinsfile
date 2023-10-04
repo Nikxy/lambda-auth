@@ -11,6 +11,8 @@ pipeline {
         SRC_NODE_MODULES_EXISTS = fileExists 'src/node_modules'
         AWS_SAM_EXISTS = fileExists 'venv/bin/sam'
         AWS_DEPLOY_REGION = 'il-central-1'
+
+        LOCALSTACK_TESTING_REGION = 'il-central-1'
         // Location of the workspace on the docker host machine
         DOCKER_HOST_WORKSPACE = '/home/diana/dev/jenkins_workspace/auth.nikxy.dev'
         STACK_NAME = 'nikxy-auth'
@@ -72,7 +74,7 @@ pipeline {
             steps {
                 script {
                     def sam_arguments = readFile "${WORKSPACE}/sam-api-arguments.sh"
-                    sh 'nohup venv/bin/sam '+sam_arguments+' --region $AWS_REGION -v $DOCKER_HOST_WORKSPACE > $WORKSPACE/sam.log 2>&1 &'
+                    sh 'nohup venv/bin/sam '+sam_arguments+' --region $LOCALSTACK_TESTING_REGION -v $DOCKER_HOST_WORKSPACE > $WORKSPACE/sam.log 2>&1 &'
                     sh '''#!/bin/bash
                         while [[ $(tail -n 1 sam.log) != *"CTRL+C"* ]]; do echo "waiting for sam" && sleep 1; done'''
 

@@ -4,4 +4,4 @@ node_modules/
 .vscode/
 junit**.xml
 .cert
-.env
+**.env

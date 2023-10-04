@@ -1,0 +1,11 @@
+#!/bin/bash
+testparamsFile="test-parameters.env"
+
+test -f $testparamsFile || { echo "Please create $testparamsFile file"; exit 1; }
+
+parameters="";
+while read line; do
+    parameters+=" $line";
+done < $testparamsFile
+
+sam $(<sam-api-arguments.sh) --region il-central-1 --parameter-overrides $parameters

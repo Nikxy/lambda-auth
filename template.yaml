@@ -333,6 +333,8 @@ Resources:
       Description: API Deployment for the auth service
       RestApiId: !Ref ApiGateway
       StageName: prod
+      StageDescription:
+        LoggingLevel: ERROR
 
   ApiDomain:
     Type: AWS::ApiGateway::DomainName

@@ -27,7 +27,7 @@ Parameters:
   LocalStack:
     Type: String
     Description: The localstack endpoint, leave empty for deployment.
-    Default: ''
+    Default: 'false'
   
 Conditions:
   ProductionEnvironment: !Equals 

@@ -11,6 +11,11 @@ pipeline {
         SRC_NODE_MODULES_EXISTS = fileExists 'src/node_modules'
         AWS_SAM_EXISTS = fileExists 'venv/bin/sam'
         AWS_DEFAULT_REGION = 'il-central-1'
+        // Location of the workspace on the docker host machine
+        DOCKER_HOST_WORKSPACE = '/home/diana/dev/jenkins_workspace/auth.nikxy.dev'
+        STACK_NAME = 'nikxy-auth'
+        // S3 Bucket for SAM to upload the template and code to
+        SAM_S3 = 'nikxy-cloudformation'
     }
 
     stages {
@@ -67,7 +72,7 @@ pipeline {
             steps {
                 script {
                     def sam_arguments = readFile "${WORKSPACE}/sam-api-arguments.sh"
-                    sh 'nohup venv/bin/sam '+sam_arguments+' --region $AWS_REGION -v /home/diana/dev/jenkins_workspace/auth.nikxy.dev > $WORKSPACE/sam.log 2>&1 &'
+                    sh 'nohup venv/bin/sam '+sam_arguments+' --region $AWS_REGION -v $DOCKER_HOST_WORKSPACE > $WORKSPACE/sam.log 2>&1 &'
                     sh '''#!/bin/bash
                         while [[ $(tail -n 1 sam.log) != *"CTRL+C"* ]]; do echo "waiting for sam" && sleep 1; done'''
 
@@ -91,8 +96,8 @@ pipeline {
                     usernameVariable: 'AWS_ACCESS_KEY_ID',
                     passwordVariable: 'AWS_SECRET_ACCESS_KEY'
                 )]) {
-                    sh 'venv/bin/sam deploy --stack-name nikxy-auth --region ${AWS_DEFAULT_REGION} \
-                        --s3-bucket nikxy-cloudformation --s3-prefix sam-nikxy-auth \
+                    sh 'venv/bin/sam deploy --stack-name $STACK_NAME --region ${AWS_DEFAULT_REGION} \
+                        --s3-bucket $SAM_S3 --s3-prefix sam-$STACK_NAME \
                         --on-failure ROLLBACK --capabilities CAPABILITY_NAMED_IAM \
                         --no-progressbar'
                 }

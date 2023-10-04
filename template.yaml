@@ -24,7 +24,9 @@ Parameters:
     Description: The key of the jwt secret in secret manager
   LocalStack:
     Type: String
-    Description: The localstack endpoint
+    Description: The localstack endpoint, leave empty for deployment.
+    Default: ''
+  
 Conditions:
   ProductionEnvironment: !Equals 
     - !Ref EnvironmentType

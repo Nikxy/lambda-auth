@@ -86,12 +86,12 @@ pipeline {
                         while [[ $(tail -n 1 sam.log) != *"CTRL+C"* ]]
                         do 
                             echo "waiting for sam"
+                            sleep 1
                             if((time > 30)); then
                                 echo "sam timeout"
                                 exit 1
                             fi
-                            ((time++)
-                            sleep 1
+                            $time++
                         done
                     '''
 

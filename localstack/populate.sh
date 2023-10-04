@@ -6,8 +6,8 @@ userData=$(<test-user.json)
 secretData=$(<test-secret.json)
 
 localstackEndpoint="http://localstack.dev.callandorit.net"
-tableName="nikxy-auth"
-secretName="nikxy-auth/secrets"
+tableName="auth-test"
+secretName="auth-test/secrets"
 
 # Colors
 GREEN='\033[0;32m'

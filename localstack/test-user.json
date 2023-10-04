@@ -1,7 +1,7 @@
 {
     "id": {"S":"6ab997ce-400a-49a5-8b35-4cde68ecd71b"},
     "doc_type": {"S":"user"},
-    "doc_domain": {"S":"orders"},
-    "username": {"S":"orders"},
+    "doc_domain": {"S":"test"},
+    "username": {"S":"test"},
     "password": {"S":"$2a$10$QoEHWtYVzLQT1HCPbHU99OTZ/AQ/.ct6pqrGpz3Uph6vt3SZm0M/2"}
 }

@@ -19,9 +19,11 @@ Parameters:
   TableName:
     Type: String
     Description: The name of the dynamodb table
+    Default: auth-service
   JWTSecretsKey:
     Type: String
     Description: The key of the jwt secret in secret manager
+    Default: auth-service
   LocalStack:
     Type: String
     Description: The localstack endpoint, leave empty for deployment.

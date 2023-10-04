@@ -11,8 +11,7 @@ userData=$(<test-user.json)
 secretData=$(<test-secret.json)
 
 localstackEndpoint="$1"
-tableName="auth-test"
-secretName="auth-test/secrets"
+defaultKeys="auth-service"
 
 # Colors
 GREEN='\033[0;32m'
@@ -30,7 +29,7 @@ aws_command(){
 }
 
 echo -n "#   Creating table... "
-aws_command dynamodb create-table --table-name "$tableName" \
+aws_command dynamodb create-table --table-name "$defaultKeys" \
     --attribute-definitions \
         AttributeName=id,AttributeType=S \
         AttributeName=doc_type,AttributeType=S \
@@ -42,9 +41,9 @@ aws_command dynamodb create-table --table-name "$tableName" \
     --table-class STANDARD
 
 echo -n "#   Putting userdata into table... "
-aws_command dynamodb put-item --table-name "$tableName" --item="$userData"
+aws_command dynamodb put-item --table-name "$defaultKeys" --item="$userData"
 
 echo -n "#   Creating secret... "
-aws_command secretsmanager create-secret --name "$secretName" --secret-string "$secretData"
+aws_command secretsmanager create-secret --name "$defaultKeys" --secret-string "$secretData"
 
 echo "#=================================================#"

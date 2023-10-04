@@ -6,9 +6,9 @@
 	"scripts": {
 		"test": "npm run test:unit && npm run test:integration",
 		"test:unit": "mocha ./tests/unit",
-		"test:integration": "export $(cat ./test.env | xargs) && mocha ./tests/integration -t 10000",
+		"test:integration": "export $(cat ./test-variables | xargs) && mocha ./tests/integration -t 10000",
 		"test_ci:unit": "mocha ./tests/unit --reporter mocha-junit-reporter --reporter-options mochaFile=./junit.xml",
-		"test_ci:integration": "export $(cat ./test.env | xargs) && mocha ./tests/integration -t 60000 --reporter mocha-junit-reporter --reporter-options mochaFile=./junit-integration.xml"
+		"test_ci:integration": "export $(cat ./test-variables | xargs) && mocha ./tests/integration -t 60000 --reporter mocha-junit-reporter --reporter-options mochaFile=./junit-integration.xml"
 	},
 	"author": "Nikxy",
 	"license": "ISC",

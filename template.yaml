@@ -25,7 +25,6 @@ Parameters:
   LocalStack:
     Type: String
     Description: The localstack endpoint
-    Default: false
 Conditions:
   ProductionEnvironment: !Equals 
     - !Ref EnvironmentType

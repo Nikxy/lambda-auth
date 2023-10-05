@@ -65,7 +65,7 @@ pipeline {
             }
 
             steps {
-                configFileProvider([CONFIG_FILE)]) {
+                configFileProvider([CONFIG_FILE]) {
                     script {
                         config = readJSON(file:config_json)
 

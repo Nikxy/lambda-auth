@@ -8,8 +8,10 @@ pipeline {
         nodejs 'Node 18.x'
     }
     environment {
+        // Check if node_modules has been installed in previous builds
         TEST_NODE_MODULES_EXISTS = fileExists 'node_modules'
         SRC_NODE_MODULES_EXISTS = fileExists 'src/node_modules'
+        // Check if AWS SAM has been installed in previous builds
         AWS_SAM_EXISTS = fileExists 'venv/bin/sam'
     }
 
@@ -17,6 +19,7 @@ pipeline {
         stage('Install AWS SAM') {
             when { expression { AWS_SAM_EXISTS == 'false' } }
             steps {
+                // Install AWS SAM with Python into venv to keep the install only for the build
                 echo 'Installing AWS SAM'
                 sh(returnStdout:true, script: 'python3 -m venv venv && venv/bin/pip install aws-sam-cli')
             }
@@ -69,14 +72,18 @@ pipeline {
                     script {
                         config = readJSON(file:config_json)
 
+                        // Read sam arguments from file
                         def sam_arguments = readFile "${WORKSPACE}/sam-api-arguments.sh"
                         
+                        // Start SAM
                         sh "nohup venv/bin/sam $sam_arguments " +
                             "--region $config.LOCALSTACK_TESTING_REGION "+
                             "-v $config.DOCKER_HOST_WORKSPACE " +
                             "--parameter-overrides EnvironmentType=test "+
                             "LocalStack=$config.LOCALSTACK_URL " +
                             "> $WORKSPACE/sam.log 2>&1 &"
+
+                        // Wait for SAM finish initializing
                         def waitStatus = sh returnStatus: true, script:  '''#!/bin/bash
                             time=0
                             while [[ $(tail -n 1 sam.log) != *"CTRL+C"* ]]
@@ -93,7 +100,7 @@ pipeline {
                             error 'Sam Timeout'
                         }
 
-
+                        // Run integration tests
                         def exitStatus = sh returnStatus: true, script: 'npm run test_ci:integration'
                         junit 'junit-integration.xml'
                         if (exitStatus != 0) {

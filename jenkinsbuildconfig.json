@@ -1,0 +1,8 @@
+{
+  "AWS_STACK_NAME":"auth-service",
+  "AWS_DEPLOY_REGION":"eu-central-1",
+  "LOCALSTACK_URL":"http://localstack/",
+  "LOCALSTACK_TESTING_REGION":"eu-central-1",
+  "DOCKER_HOST_WORKSPACE":"/home/dev/jenkins_workspace/auth-service",
+  "SAM_S3":"my-cloudformation"
+}

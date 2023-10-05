@@ -1,4 +1,5 @@
 def SRC_FOLDER = 'src'
+def CONFIG_FILE = configFile(fileId:'auth-service-config', variable:'config_json')
 
 pipeline {
     agent any
@@ -10,15 +11,6 @@ pipeline {
         TEST_NODE_MODULES_EXISTS = fileExists 'node_modules'
         SRC_NODE_MODULES_EXISTS = fileExists 'src/node_modules'
         AWS_SAM_EXISTS = fileExists 'venv/bin/sam'
-        AWS_DEPLOY_REGION = 'il-central-1'
-
-        LOCALSTACK_URL = 'http://localstack.dev.callandorit.net/'
-        LOCALSTACK_TESTING_REGION = 'il-central-1'
-        // Location of the workspace on the docker host machine
-        DOCKER_HOST_WORKSPACE = '/home/diana/dev/jenkins_workspace/auth.nikxy.dev'
-        STACK_NAME = 'nikxy-auth'
-        // S3 Bucket for SAM to upload the template and code to
-        SAM_S3 = 'nikxy-cloudformation'
     }
 
     stages {
@@ -73,34 +65,40 @@ pipeline {
             }
 
             steps {
-                script {
-                    def sam_arguments = readFile "${WORKSPACE}/sam-api-arguments.sh"
+                configFileProvider([CONFIG_FILE)]) {
+                    script {
+                        config = readJSON(file:config_json)
 
-                    sh "nohup venv/bin/sam "+sam_arguments+""" \
-                        --region $LOCALSTACK_TESTING_REGION -v $DOCKER_HOST_WORKSPACE \
-                        --parameter-overrides EnvironmentType=test LocalStack=$LOCALSTACK_URL \
-                        > $WORKSPACE/sam.log 2>&1 &"""
-                    def waitStatus = sh returnStatus: true, script:  '''#!/bin/bash
-                        time=0
-                        while [[ $(tail -n 1 sam.log) != *"CTRL+C"* ]]
-                        do 
-                            echo "waiting for sam"
-                            sleep 1
-                            if((time > 30)); then
-                                exit 1
-                            fi
-                            time=$((time+1))
-                        done
-                    '''
-                    if(waitStatus != 0){
-                        error 'Sam Timeout'
-                    }
+                        def sam_arguments = readFile "${WORKSPACE}/sam-api-arguments.sh"
+                        
+                        sh "nohup venv/bin/sam $sam_arguments " +
+                            "--region $config.LOCALSTACK_TESTING_REGION "+
+                            "-v $config.DOCKER_HOST_WORKSPACE " +
+                            "--parameter-overrides EnvironmentType=test "+
+                            "LocalStack=$config.LOCALSTACK_URL " +
+                            "> $WORKSPACE/sam.log 2>&1 &"
+                        def waitStatus = sh returnStatus: true, script:  '''#!/bin/bash
+                            time=0
+                            while [[ $(tail -n 1 sam.log) != *"CTRL+C"* ]]
+                            do 
+                                echo "waiting for sam"
+                                sleep 1
+                                if((time > 30)); then
+                                    exit 1
+                                fi
+                                time=$((time+1))
+                            done
+                        '''
+                        if(waitStatus != 0){
+                            error 'Sam Timeout'
+                        }
 
 
-                    def exitStatus = sh returnStatus: true, script: 'npm run test_ci:integration'
-                    junit 'junit-integration.xml'
-                    if (exitStatus != 0) {
-                        error 'Integration tests failed'
+                        def exitStatus = sh returnStatus: true, script: 'npm run test_ci:integration'
+                        junit 'junit-integration.xml'
+                        if (exitStatus != 0) {
+                            error 'Integration tests failed'
+                        }
                     }
                 }
             }
@@ -111,16 +109,21 @@ pipeline {
                 anyOf { changeset 'src/**'; changeset 'template.yaml'}
             }
             steps {
-                sh 'echo "Deploying to AWS"'
-                withCredentials([usernamePassword(
-                    credentialsId: 'AWSJenkinsDeploy',
-                    usernameVariable: 'AWS_ACCESS_KEY_ID',
-                    passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-                )]) {
-                    sh 'venv/bin/sam deploy --stack-name $AWS_STACK_NAME --region ${AWS_DEPLOY_REGION} \
-                        --s3-bucket $SAM_S3 --s3-prefix sam-$AWS_STACK_NAME \
-                        --on-failure ROLLBACK --capabilities CAPABILITY_NAMED_IAM \
-                        --no-progressbar'
+                configFileProvider([CONFIG_FILE]) {
+                    withCredentials([usernamePassword(
+                            credentialsId: 'AWSJenkinsDeploy',
+                            usernameVariable: 'AWS_ACCESS_KEY_ID',
+                            passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                        )]) {
+                        script {
+                            config = readJSON(file:config_json)
+                            sh "venv/bin/sam deploy --no-progressbar "+
+                                "--stack-name $config.AWS_STACK_NAME "+
+                                "--region $config.AWS_DEPLOY_REGION "+
+                                "--s3-bucket $config.SAM_S3 --s3-prefix sam-$config.AWS_STACK_NAME " +
+                                "--on-failure ROLLBACK --capabilities CAPABILITY_NAMED_IAM"
+                        }
+                    }
                 }
             }
         }

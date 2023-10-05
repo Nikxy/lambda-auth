@@ -1,8 +1,8 @@
 class Auth {
-    //BasePath = "https://sam.dev.callandorit.net/";
-    BasePath = "https://auth.nikxy.dev/";
+    ServiceURL = null;
 
     Login = async (domain,username, password) => {
+		this.CheckURLSet();
         const data = {
 			domain,
 			username,
@@ -12,7 +12,7 @@ class Auth {
         let response;
 
 		try {
-			response = await fetch(this.BasePath + "login", {
+			response = await fetch(new URL("login",this.ServiceURL), {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(data),
@@ -42,9 +42,10 @@ class Auth {
         return responseObj.token;
     }
 	Refresh = async (jwt) => {
+		this.CheckURLSet();
 		let response;
 		try {
-			response = await fetch(this.BasePath + "refresh", {
+			response = await fetch(new URL("refresh",this.ServiceURL), {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -76,9 +77,10 @@ class Auth {
         return responseObj.token;
 	}
 	Status = async (jwt) => {
+		this.CheckURLSet();
 		let response;
 		try {
-			response = await fetch(this.BasePath + "status", {
+			response = await fetch(new URL("status",this.ServiceURL), {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -89,6 +91,9 @@ class Auth {
 		} catch (error) {
             throw new Error("Status failed: " + error.message);
 		}
+	}
+	CheckURLSet = () => {
+		if(!this.ServiceURL) throw new Error("ServiceURL not set");
 	}
 }
 

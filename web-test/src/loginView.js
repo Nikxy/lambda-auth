@@ -30,10 +30,12 @@ class Login {
 		e.preventDefault();
 		this.hideError();
 
-		const domain = this.loginForm.elements["domain"].value;
+		const url = 	 this.loginForm.elements["url"].value;
+		const domain = 	 this.loginForm.elements["domain"].value;
 		const username = this.loginForm.elements["username"].value;
 		const password = this.loginForm.elements["password"].value;
-
+		
+		Auth.ServiceURL = url;
 		this.loading(true);
 		let token = null;
 		try {
@@ -49,6 +51,7 @@ class Login {
 
 		this.loginForm.elements["password"].value = "";
 		localStorage.setItem("jwt", token);
+		localStorage.setItem("serviceurl", url);
 
 		if(this.loggedIn) this.loggedIn();
 	};

@@ -30,6 +30,7 @@ class Status {
 
 	logout = () => {
 		localStorage.removeItem("jwt");
+		localStorage.removeItem("serviceurl");
 		if (this.loggedOut) this.loggedOut();
 	};
 
@@ -72,6 +73,7 @@ class Status {
 	refreshToken = async (e) => {
 		Loading.show();
 		let newJWT;
+		Auth.ServiceURL = localStorage.getItem("serviceurl");
 		try {
 			newJWT = await Auth.Refresh(localStorage.getItem("jwt"));
 		}
@@ -90,6 +92,7 @@ class Status {
 	checkStatus = async () => {
 		Loading.show();
 		let status;
+		Auth.ServiceURL = localStorage.getItem("serviceurl");
 		try {
 			status = await Auth.Status(localStorage.getItem("jwt"));
 		}

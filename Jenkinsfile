@@ -117,8 +117,8 @@ pipeline {
                     usernameVariable: 'AWS_ACCESS_KEY_ID',
                     passwordVariable: 'AWS_SECRET_ACCESS_KEY'
                 )]) {
-                    sh 'venv/bin/sam deploy --stack-name $STACK_NAME --region ${AWS_DEPLOY_REGION} \
-                        --s3-bucket $SAM_S3 --s3-prefix sam-$STACK_NAME \
+                    sh 'venv/bin/sam deploy --stack-name $AWS_STACK_NAME --region ${AWS_DEPLOY_REGION} \
+                        --s3-bucket $SAM_S3 --s3-prefix sam-$AWS_STACK_NAME \
                         --on-failure ROLLBACK --capabilities CAPABILITY_NAMED_IAM \
                         --no-progressbar'
                 }

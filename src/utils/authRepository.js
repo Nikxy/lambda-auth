@@ -1,4 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import AWSXRay from "aws-xray-sdk-core";
 import {
 	DynamoDBDocumentClient,
 	GetCommand,
@@ -17,7 +18,10 @@ class Repository {
 	init = () => {
 		if (this.initialized) return;
 		const ddb = new DynamoDBClient(initAWSConfig());
-		this.docClient = DynamoDBDocumentClient.from(ddb);
+		if(process.env.AWS_SAM_LOCAL)
+			this.docClient = DynamoDBDocumentClient.from(ddb);
+		else
+			this.docClient = AWSXRay.captureAWSv3Client(DynamoDBDocumentClient.from(ddb));
 	};
 
 	getSession = async (sessionId) => {

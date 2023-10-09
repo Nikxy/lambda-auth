@@ -18,10 +18,9 @@ class Repository {
 	init = () => {
 		if (this.initialized) return;
 		const ddb = new DynamoDBClient(initAWSConfig());
-		if(process.env.AWS_SAM_LOCAL)
-			this.docClient = DynamoDBDocumentClient.from(ddb);
-		else
-			this.docClient = AWSXRay.captureAWSv3Client(DynamoDBDocumentClient.from(ddb));
+		this.docClient = DynamoDBDocumentClient.from(ddb);
+		if(!process.env.AWS_SAM_LOCAL)
+			this.docClient = AWSXRay.captureAWSv3Client(this.docClient);
 	};
 
 	getSession = async (sessionId) => {

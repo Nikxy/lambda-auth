@@ -124,7 +124,6 @@ Resources:
           JWT_SECRET: !Ref JWTSecretsKey
           REGION: !Ref AWS::Region
           LOCAL_ENDPOINT: !Ref LocalStack
-          AWS_XRAY_ENABLED: true
       TracingConfig:
         Mode: Active
     Metadata:

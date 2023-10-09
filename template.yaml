@@ -6,9 +6,7 @@ Parameters:
     Type: String
     Description: The environment of the service
     Default: prod
-    AllowedValues:
-      - prod
-      - test
+    AllowedValues: [prod, test]
     ConstraintDescription: Must specify prod or test.
   Domain:
     Type: String
@@ -30,12 +28,8 @@ Parameters:
     Default: 'false'
   
 Conditions:
-  ProductionEnvironment: !Equals 
-    - !Ref EnvironmentType
-    - prod
-  TestEnvironment: !Equals 
-    - !Ref EnvironmentType
-    - test
+  ProductionEnvironment: !Equals [!Ref EnvironmentType, prod]
+  TestEnvironment: !Equals [!Ref EnvironmentType, test]
   
 Resources:
   JWTSecrets:
@@ -74,10 +68,8 @@ Resources:
         Statement:
           - Effect: "Allow"
             Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action:
-              - "sts:AssumeRole"
+              Service: [lambda.amazonaws.com]
+            Action: ["sts:AssumeRole"]
 
       # Create a policy attached to the role
       # Allow Cloudwatch logging
@@ -87,16 +79,14 @@ Resources:
             Version: "2012-10-17"
             Statement:
               - Effect: "Allow"
-                Action:
-                  - logs:*
+                Action: [logs:*]
                 Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
         - PolicyName: "ReadSecrets"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
               - Effect: "Allow"
-                Action:
-                  - secretsmanager:GetSecretValue
+                Action: [secretsmanager:GetSecretValue]
                 Resource: !Ref JWTSecrets
         - PolicyName: "AccessDynamoDB"
           PolicyDocument:
@@ -147,8 +137,7 @@ Resources:
       Name: !Ref AWS::StackName
       Description: API Gateway for the auth service
       EndpointConfiguration:
-        Types:
-          - REGIONAL
+        Types: [REGIONAL]
 
   ApiLoginResource:
     Type: AWS::ApiGateway::Resource

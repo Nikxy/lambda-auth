@@ -2,10 +2,14 @@ import {
 	SecretsManagerClient,
 	GetSecretValueCommand,
 } from "@aws-sdk/client-secrets-manager";
+import AWSXRay from "aws-xray-sdk-core";
 
 import initAWSConfig from "#utils/initConfig.js";
 
-const clientSecrets = new SecretsManagerClient(initAWSConfig());
+let clientSecrets = new SecretsManagerClient(initAWSConfig());
+
+if(!process.env.AWS_SAM_LOCAL)
+	clientSecrets = AWSXRay.captureAWSv3Client(clientSecrets);
 
 export default async function (secret_name) {
 	let response;

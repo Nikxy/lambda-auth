@@ -1,7 +1,6 @@
 # Lambda Auth Service
-Auth Service in Lambda With DynamoDB
-
 ![Service Diagram](diagram.png)
+Simple Auth Service running on Lambda with SecretsManager and DynamoDB
 
 ### Local Testing
 

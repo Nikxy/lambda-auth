@@ -334,6 +334,7 @@ Resources:
       StageDescription:
         LoggingLevel: ERROR
         TracingEnabled: true
+        MetricsEnabled: true
 
   ApiDomain:
     Type: AWS::ApiGateway::DomainName

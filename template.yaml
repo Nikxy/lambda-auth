@@ -105,6 +105,7 @@ Resources:
             Statement:
               - Effect: "Allow"
                 Action: [xray:PutTraceSegments,xray:PutTelemetryRecords]
+                Resource: "*"
 
   Lambda:
     Type: AWS::Lambda::Function

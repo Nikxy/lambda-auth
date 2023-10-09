@@ -99,6 +99,12 @@ Resources:
                   - dynamodb:PutItem
                   - dynamodb:UpdateItem
                 Resource: !GetAtt DynamoDBTable.Arn
+        - PolicyName: "WriteXray"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action: [xray:PutTraceSegments,xray:PutTelemetryRecords]
 
   Lambda:
     Type: AWS::Lambda::Function
@@ -118,6 +124,9 @@ Resources:
           JWT_SECRET: !Ref JWTSecretsKey
           REGION: !Ref AWS::Region
           LOCAL_ENDPOINT: !Ref LocalStack
+          AWS_XRAY_ENABLED: true
+      TracingConfig:
+        Mode: Active
     Metadata:
         aws:asset:path: "./src"
         aws:asset:property: "Code"
@@ -324,6 +333,7 @@ Resources:
       StageName: prod
       StageDescription:
         LoggingLevel: ERROR
+        TracingEnabled: true
 
   ApiDomain:
     Type: AWS::ApiGateway::DomainName

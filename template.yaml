@@ -10,7 +10,9 @@ Parameters:
     ConstraintDescription: Must specify prod or test.
   Domain:
     Type: String
-    Description: The domain name of the service
+    Description: >-
+      The domain name of the service, 
+      used for the api gateway custom domain and outputs to use in other stacks.
     MinLength: 1
     MaxLength: 255
     ConstraintDescription: Must specify domain.

@@ -350,3 +350,7 @@ Outputs:
   DistributionURL:
     Description: Amazon RegionalDomainName to set up custom domain
     Value: !Sub "${ApiDomain.RegionalDomainName}"
+
+  ServiceURL:
+    Description: The url to access the service
+    Value: !Sub "https://${Domain}/"

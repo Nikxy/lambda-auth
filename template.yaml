@@ -70,17 +70,12 @@ Resources:
             Principal:
               Service: [lambda.amazonaws.com]
             Action: ["sts:AssumeRole"]
-
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
       # Create a policy attached to the role
       # Allow Cloudwatch logging
       Policies:
-        - PolicyName: "AllowLogging"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action: [logs:*]
-                Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
         - PolicyName: "ReadSecrets"
           PolicyDocument:
             Version: "2012-10-17"
@@ -99,13 +94,7 @@ Resources:
                   - dynamodb:PutItem
                   - dynamodb:UpdateItem
                 Resource: !GetAtt DynamoDBTable.Arn
-        - PolicyName: "WriteXray"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: "Allow"
-                Action: [xray:PutTraceSegments,xray:PutTelemetryRecords]
-                Resource: "*"
+      
 
   Lambda:
     Type: AWS::Lambda::Function

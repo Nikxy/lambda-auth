@@ -28,7 +28,7 @@ Parameters:
     Default: auth-service
     MinLength: 1
     MaxLength: 255
-    AllowedPattern: "^[a-zA-Z][-a-zA-Z0-9]*$" # Only allow alphanumeric characters and dashes, and must start with a letter
+    AllowedPattern: '^[a-zA-Z][-a-zA-Z0-9]*$' # Only allow alphanumeric characters and dashes, and must start with a letter
 
   JWTSecretsKey:
     Type: String
@@ -77,33 +77,33 @@ Resources:
   LambdaRole:
     Type: AWS::IAM::Role
     Properties:
-      Path: "/"
+      Path: /
       RoleName: !Sub "${AWS::StackName}-lambda"
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
-          - Effect: "Allow"
+          - Effect: Allow
             Principal:
               Service: [lambda.amazonaws.com]
-            Action: ["sts:AssumeRole"]
+            Action: [sts:AssumeRole]
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
       # Create a policy attached to the role
       # Allow Cloudwatch logging
       Policies:
-        - PolicyName: "ReadSecrets"
+        - PolicyName: ReadSecrets
           PolicyDocument:
-            Version: "2012-10-17"
+            Version: '2012-10-17'
             Statement:
-              - Effect: "Allow"
+              - Effect: Allow
                 Action: [secretsmanager:GetSecretValue]
                 Resource: !Ref JWTSecrets
-        - PolicyName: "AccessDynamoDB"
+        - PolicyName: AccessDynamoDB
           PolicyDocument:
-            Version: "2012-10-17"
+            Version: '2012-10-17'
             Statement:
-              - Effect: "Allow"
+              - Effect: Allow
                 Action:
                   - dynamodb:Scan
                   - dynamodb:GetItem
@@ -120,7 +120,7 @@ Resources:
       FunctionName: !Ref AWS::StackName
       Timeout: 10
       Architectures:
-        - !If [ProductionEnvironment,arm64,x86_64]
+        - !If [ProductionEnvironment, arm64, x86_64]
       Runtime: nodejs18.x
       Handler: index.handler
       Role: !GetAtt LambdaRole.Arn
@@ -133,12 +133,11 @@ Resources:
       TracingConfig:
         Mode: Active
     Metadata:
-        aws:asset:path: "./src"
-        aws:asset:property: "Code"
+        aws:asset:path: ./src
+        aws:asset:property: Code
 
   LambdaInvoke:
     Type: AWS::Lambda::Permission
-    
     Properties:
       Action: "lambda:InvokeFunction"
       FunctionName: !GetAtt Lambda.Arn

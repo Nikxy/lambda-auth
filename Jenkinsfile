@@ -90,7 +90,7 @@ pipeline {
                             do 
                                 echo "waiting for sam"
                                 sleep 1
-                                if((time > 30)); then
+                                if((time > 45)); then
                                     exit 1
                                 fi
                                 time=$((time+1))

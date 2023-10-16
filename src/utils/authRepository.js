@@ -35,7 +35,6 @@ class Repository {
 				},
 			})
 		);
-
 		return results.Item;
 	};
 	refreshSession = async (sessionId) => {
@@ -99,8 +98,6 @@ class Repository {
 			console.error("DB: " + e.message);
 			return response.ServerError();
 		}
-
-
 		return [sessionID, refreshToken];
 	}
 }

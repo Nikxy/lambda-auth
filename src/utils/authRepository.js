@@ -21,6 +21,8 @@ class Repository {
 		this.docClient = DynamoDBDocumentClient.from(ddb);
 		if(!process.env.AWS_SAM_LOCAL)
 			this.docClient = AWSXRay.captureAWSv3Client(this.docClient);
+
+		this.initialized = true;
 	};
 
 	getSession = async (sessionId) => {

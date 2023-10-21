@@ -4,15 +4,15 @@ import jwt from "#utils/jwt.js";
 import response from "#utils/response.js";
 
 export default async function (event) {
-    const jwtData = event.authorizationToken;
-    // Init data from request
+	const jwtData = event.authorizationToken;
+	// Init data from request
 	let tokenData;
 	try {
 		tokenData = loadAuthToken(jwtData);
 	} catch (e) {
 		return authorizerResponse.Unauthorized(event);
 	}
-    
+
 	// LOAD JWT SECRET
 	let secrets;
 	try {
@@ -28,15 +28,16 @@ export default async function (event) {
 	if (!jwtSecret) return authorizerResponse.Unauthorized(event);
 	// Verify JWT
 	const jwtStatus = jwt.validateJWT(jwtSecret, tokenData.jwt);
-	if (!jwtStatus.valid || jwtStatus.expired) return authorizerResponse.Unauthorized(event);
+	if (!jwtStatus.valid || jwtStatus.expired)
+		return authorizerResponse.Unauthorized(event);
 
-    return authorizerResponse.Allow(event);
+	return authorizerResponse.Allow(event);
 }
 
 const authorizerResponse = {
-    Unauthorized: (event) => generatePolicy("user", "Deny", event.methodArn),
-    Allow: (event) => generatePolicy("user", "Allow", event.methodArn),
-}
+	Unauthorized: (event) => generatePolicy("user", "Deny", event.methodArn),
+	Allow: (event) => generatePolicy("user", "Allow", event.methodArn),
+};
 
 const generatePolicy = (principalId, effect, resource) => {
     const authResponse = {};

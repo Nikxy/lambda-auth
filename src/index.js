@@ -39,7 +39,7 @@ const handler = async (event) => {
 		case "/refresh":
 			return await routeRefresh(event);
 		case "/auth":
-			return response.OK("Hello Auth World!");
+			return response.OK();
 		default:
 			return response.BadRequest("Invalid Request");
 	}

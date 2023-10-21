@@ -37,16 +37,16 @@ describe("Login Succeed", () => {
 	it("jwt status should be valid and not expired", async () => {
 		if (jwtStr == null) assert.fail("jwt was not set from previous test");
 
-		var headers = {
-			Accept: "application/json,*/*",
-			[process.env.AUTH_HEADER]: "Bearer " + jwtStr,
-		};
+		const response = await fetch(baseUrl + "status", {
+			headers: createAuthorizationHeaders(jwtStr),
+		});
 
-		var response = await fetch(baseUrl + "status", headers);
+		const json = await response.text();
+		if (response.status != 200)
+			assert.fail(
+				"Status code not 200: " + response.status + " | " + json
+			);
 
-		var json = await response.text();
-		if(response.status != 200) assert.fail("Status code not 200: " + response.status + " | " + json);
-		
 		let object;
 		try {
 			object = JSON.parse(json);
@@ -59,15 +59,16 @@ describe("Login Succeed", () => {
 	it("can refresh token", async () => {
 		if (jwtStr == null) assert.fail("jwt was not set from previous test");
 
-		var headers = {
-			Accept: "application/json,*/*",
-			[process.env.AUTH_HEADER]: "Bearer " + jwtStr,
-		};
 
-		var response = await fetch(baseUrl + "refresh", headers);
+		const response = await fetch(baseUrl + "refresh", {
+			headers: createAuthorizationHeaders(jwtStr),
+		});
 
-		var json = await response.text();
-		if(response.status != 200) assert.fail("Status code not 200: " + response.status + " | " + json);
+		const json = await response.text();
+		if (response.status != 200)
+			assert.fail(
+				"Status code not 200: " + response.status + " | " + json
+			);
 
 		let object;
 		try {
@@ -81,11 +82,8 @@ describe("Login Succeed", () => {
 	it("refreshed jwt status should be valid and not expired", async () => {
 		if (jwtStr == null) assert.fail("jwt was not set from previous test");
 
-		var response = await fetch(baseUrl + "status", {
-			headers: {
-				Accept: "application/json,*/*",
-				JWTAuthorization: "Bearer " + jwtStr,
-			},
+		const response = await fetch(baseUrl + "status", {
+			headers: createAuthorizationHeaders(jwtStr),
 		});
 		expect(response.status).to.equal(200);
 		var json = await response.text();
@@ -99,3 +97,10 @@ describe("Login Succeed", () => {
 		expect(object.expired).to.equal(false);
 	});
 });
+
+function createAuthorizationHeaders(jwtToken) {
+	return {
+		Accept: "application/json,*/*",
+		[process.env.AUTH_HEADER]: "Bearer " + jwtToken,
+	};
+}

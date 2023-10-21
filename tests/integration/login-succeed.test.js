@@ -96,6 +96,15 @@ describe("Login Succeed", () => {
 		expect(object.valid).to.equal(true);
 		expect(object.expired).to.equal(false);
 	});
+
+	it("authorizer should accept jwt", async () => {
+		if (jwtStr == null) assert.fail("jwt was not set from previous test");
+
+		const response = await fetch(baseUrl + "auth", {
+			headers: createAuthorizationHeaders(jwtStr),
+		});
+		expect(response.status).to.equal(200);
+	});
 });
 
 function createAuthorizationHeaders(jwtToken) {

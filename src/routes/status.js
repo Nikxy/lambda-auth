@@ -4,12 +4,10 @@ import jwt from "#utils/jwt.js";
 import loadAuthToken from "#utils/loadAuthToken.js";
 
 export default async function (event) {
+	const jwtData = event.headers["Authorization"];
 	// CHECK IF AUTH HEADER IS PROVIDED
-	if (!event.headers["Authorization"])
-	throw new Error("Please provide a jwt authorization token");
-
-	// GET TOKEN FROM AUTH HEADER
-	let jwtData = event.headers["Authorization"];
+	if (!jwtData)
+		return response.Unauthorized("Please provide a jwt authorization token");
 
 	// Init data from request
 	let tokenData;

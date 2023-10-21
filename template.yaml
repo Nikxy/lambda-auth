@@ -28,8 +28,7 @@ Parameters:
     Default: auth-service
     MinLength: 1
     MaxLength: 255
-    AllowedPattern: '^[a-zA-Z][-a-zA-Z0-9]*$' # Only allow alphanumeric characters and dashes, and must start with a letter
-
+    AllowedPattern: "^[a-zA-Z][-a-zA-Z0-9]*$" # Only allow alphanumeric characters and dashes, and must start with a letter
   JWTSecretsKey:
     Type: String
     Description: The key of the jwt secret in secret manager
@@ -39,14 +38,20 @@ Parameters:
   LocalStack:
     Type: String
     Description: The localstack endpoint, leave empty for deployment.
-    Default: 'false'
+    Default: "false"
     MinLength: 1
     MaxLength: 255
-  
+  AuthorizationHeader:
+    Type: String
+    Description: The authorization header to use for the authorizer
+    Default: Authorizationjwt
+    MinLength: 1
+    MaxLength: 255
+
 Conditions:
   ProductionEnvironment: !Equals [!Ref EnvironmentType, prod]
   TestEnvironment: !Equals [!Ref EnvironmentType, test]
-  
+
 Resources:
   JWTSecrets:
     Type: AWS::SecretsManager::Secret
@@ -80,7 +85,7 @@ Resources:
       Path: /
       RoleName: !Sub "${AWS::StackName}-lambda"
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
@@ -92,14 +97,14 @@ Resources:
       Policies:
         - PolicyName: ReadSecrets
           PolicyDocument:
-            Version: '2012-10-17'
+            Version: "2012-10-17"
             Statement:
               - Effect: Allow
                 Action: [secretsmanager:GetSecretValue]
                 Resource: !Ref JWTSecrets
         - PolicyName: AccessDynamoDB
           PolicyDocument:
-            Version: '2012-10-17'
+            Version: "2012-10-17"
             Statement:
               - Effect: Allow
                 Action:
@@ -127,11 +132,12 @@ Resources:
           JWT_SECRET: !Ref JWTSecretsKey
           REGION: !Ref AWS::Region
           LOCAL_ENDPOINT: !Ref LocalStack
+          AUTH_HEADER: !Ref AuthorizationHeader
       TracingConfig:
         Mode: Active
     Metadata:
-        aws:asset:path: ./src
-        aws:asset:property: Code
+      aws:asset:path: ./src
+      aws:asset:property: Code
 
   LambdaInvoke:
     Type: AWS::Lambda::Permission
@@ -143,7 +149,7 @@ Resources:
 
   ApiGateway:
     Type: AWS::ApiGateway::RestApi
-    
+
     Properties:
       Name: !Ref AWS::StackName
       Description: API Gateway for the auth service
@@ -152,7 +158,7 @@ Resources:
 
   ApiLoginResource:
     Type: AWS::ApiGateway::Resource
-    
+
     Properties:
       RestApiId: !Ref ApiGateway
       ParentId: !GetAtt ApiGateway.RootResourceId
@@ -173,18 +179,19 @@ Resources:
         IntegrationResponses:
           - StatusCode: 200
             ResponseParameters:
-              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Headers:
+                !Sub "'Content-Type,X-Amz-Date,${AuthorizationHeader},X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         RequestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
       MethodResponses:
         - StatusCode: 200
           ResponseParameters:
             method.response.header.Access-Control-Allow-Headers: false
             method.response.header.Access-Control-Allow-Methods: false
             method.response.header.Access-Control-Allow-Origin: false
-  
+
   LoginPost:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -229,18 +236,19 @@ Resources:
         IntegrationResponses:
           - StatusCode: 200
             ResponseParameters:
-              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Headers:
+                !Sub "'Content-Type,X-Amz-Date,${AuthorizationHeader},X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         RequestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
       MethodResponses:
         - StatusCode: 200
           ResponseParameters:
             method.response.header.Access-Control-Allow-Headers: false
             method.response.header.Access-Control-Allow-Methods: false
             method.response.header.Access-Control-Allow-Origin: false
-  
+
   RefreshGet:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -285,18 +293,19 @@ Resources:
         IntegrationResponses:
           - StatusCode: 200
             ResponseParameters:
-              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Headers:
+                !Sub "'Content-Type,X-Amz-Date,${AuthorizationHeader},X-Api-Key,X-Amz-Security-Token'"
               method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET'"
               method.response.header.Access-Control-Allow-Origin: "'*'"
         RequestTemplates:
-          application/json: "{\"statusCode\": 200}"
+          application/json: '{"statusCode": 200}'
       MethodResponses:
         - StatusCode: 200
           ResponseParameters:
             method.response.header.Access-Control-Allow-Headers: false
             method.response.header.Access-Control-Allow-Methods: false
             method.response.header.Access-Control-Allow-Origin: false
-  
+
   StatusGet:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -325,7 +334,7 @@ Resources:
       RestApiId: !Ref ApiGateway
       ParentId: !GetAtt ApiGateway.RootResourceId
       PathPart: auth
-  
+
   AuthGet:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -356,7 +365,7 @@ Resources:
       AuthorizerCredentials: !GetAtt LambdaRole.Arn
       AuthorizerUri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Lambda.Arn}/invocations"
       Type: TOKEN
-      IdentitySource: method.request.header.Authorization
+      IdentitySource: !Sub "method.request.header.${AuthorizationHeader}"
       RestApiId: !Ref ApiGateway
       AuthType: custom
 

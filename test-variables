@@ -1,3 +1,4 @@
 TEST_DOMAIN=test
 TEST_USERNAME=test
 TEST_PASSWORD=0SdoPPhVztwbuSt2lTgv
+AUTH_HEADER=Authorizationjwt

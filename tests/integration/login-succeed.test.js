@@ -37,14 +37,16 @@ describe("Login Succeed", () => {
 	it("jwt status should be valid and not expired", async () => {
 		if (jwtStr == null) assert.fail("jwt was not set from previous test");
 
-		var response = await fetch(baseUrl + "status", {
-			headers: {
-				Accept: "application/json,*/*",
-				Authorization: "Bearer " + jwtStr,
-			},
-		});
-		expect(response.status).to.equal(200);
+		var headers = {
+			Accept: "application/json,*/*",
+			[process.env.AUTH_HEADER]: "Bearer " + jwtStr,
+		};
+
+		var response = await fetch(baseUrl + "status", headers);
+
 		var json = await response.text();
+		if(response.status != 200) assert.fail("Status code not 200: " + response.status + " | " + json);
+		
 		let object;
 		try {
 			object = JSON.parse(json);
@@ -57,14 +59,16 @@ describe("Login Succeed", () => {
 	it("can refresh token", async () => {
 		if (jwtStr == null) assert.fail("jwt was not set from previous test");
 
-		var response = await fetch(baseUrl + "refresh", {
-			headers: {
-				Accept: "application/json,*/*",
-				Authorization: "Bearer " + jwtStr,
-			},
-		});
-		expect(response.status).to.equal(200);
+		var headers = {
+			Accept: "application/json,*/*",
+			[process.env.AUTH_HEADER]: "Bearer " + jwtStr,
+		};
+
+		var response = await fetch(baseUrl + "refresh", headers);
+
 		var json = await response.text();
+		if(response.status != 200) assert.fail("Status code not 200: " + response.status + " | " + json);
+
 		let object;
 		try {
 			object = JSON.parse(json);
@@ -80,7 +84,7 @@ describe("Login Succeed", () => {
 		var response = await fetch(baseUrl + "status", {
 			headers: {
 				Accept: "application/json,*/*",
-				Authorization: "Bearer " + jwtStr,
+				JWTAuthorization: "Bearer " + jwtStr,
 			},
 		});
 		expect(response.status).to.equal(200);

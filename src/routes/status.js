@@ -4,7 +4,7 @@ import jwt from "#utils/jwt.js";
 import loadAuthToken from "#utils/loadAuthToken.js";
 
 export default async function (event) {
-	const jwtData = event.headers["Authorization"];
+	const jwtData = event.headers[process.env.AUTH_HEADER];
 	// CHECK IF AUTH HEADER IS PROVIDED
 	if (!jwtData)
 		return response.Unauthorized("Please provide a jwt authorization token");

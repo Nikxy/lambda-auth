@@ -49,7 +49,7 @@ class Auth {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
-					"Authorization": "Bearer " + jwt
+					"Authorizationjwt": "Bearer " + jwt
 				}
 			});
 		} catch (error) {
@@ -84,7 +84,7 @@ class Auth {
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
-					"Authorization": "Bearer " + jwt
+					"Authorizationjwt": "Bearer " + jwt
 				}
 			});
 			return await response.json();

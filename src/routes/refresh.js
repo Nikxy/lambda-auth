@@ -83,12 +83,10 @@ export default async function (event) {
 }
 
 function initData(headers) {
+	let jwtData = headers[process.env.AUTH_HEADER];
 	// CHECK IF AUTH HEADER IS PROVIDED
-	if (!headers["Authorization"])
+	if (!jwtData)
 		throw new Error("Please provide a jwt authorization token");
-
-	// GET TOKEN FROM AUTH HEADER
-	let jwtData = headers["Authorization"];
 
 	// CHECK IF TOKEN IS WITH BEARER PREFIX AND REMOVE IT
 	const splitAuthHeader = jwtData.split(" ");

@@ -19,6 +19,10 @@ if (process.env.REGION == undefined) {
 	console.error("env REGION not set");
 	process.exit(1);
 }
+if (process.env.AUTH_HEADER == undefined) {	
+	console.error("env AUTH_HEADER not set");
+	process.exit(1);
+}
 
 // Create Lambda Handler
 const handler = async (event) => {

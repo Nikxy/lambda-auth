@@ -18,9 +18,9 @@ describe("Login Succeed", () => {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
-				domain: process.env.TEST_DOMAIN,
-				username: process.env.TEST_USERNAME,
-				password: process.env.TEST_PASSWORD,
+				domain: process.env.TEST_DOMAIN.trim(),
+				username: process.env.TEST_USERNAME.trim(),
+				password: process.env.TEST_PASSWORD.trim(),
 			}),
 		});
 		expect(response.status).to.equal(200);

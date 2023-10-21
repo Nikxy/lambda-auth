@@ -67,7 +67,7 @@ describe("Login Fail Test", () => {
 		var response = await fetch(baseUrl, {
 			...baseRequest,
 			body: JSON.stringify({
-				domain: process.env.TEST_DOMAIN,
+				domain: process.env.TEST_DOMAIN.trim(),
 				username: "invalid",
 				password: "invalid",
 			}),
@@ -90,8 +90,8 @@ describe("Login Fail Test", () => {
 		var response = await fetch(baseUrl, {
 			...baseRequest,
 			body: JSON.stringify({
-				domain: process.env.TEST_DOMAIN,
-				username: process.env.TEST_USERNAME,
+				domain: process.env.TEST_DOMAIN.trim(),
+				username: process.env.TEST_USERNAME.trim(),
 				password: "invalid",
 			}),
 		});

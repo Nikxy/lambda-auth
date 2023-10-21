@@ -28,7 +28,7 @@ describe("CORS headers test", () => {
     it("status OPTIONS cors headers", async () => {
 		await checkCorsHeaders("status", "OPTIONS", ["GET", "OPTIONS"]);
 	});
-	it("status POST cors headers", async () => {
+	it("status GET cors headers", async () => {
 		await checkCorsHeaders("status", "GET", ["GET", "OPTIONS"]);
 	});
 });

@@ -1,7 +1,7 @@
 import response from "#utils/response.js";
 import getSecret from "#utils/getSecret.js";
 import jwt from "#utils/jwt.js";
-import loadAuthToken from "#utils/loadAuthToken";
+import loadAuthToken from "#utils/loadAuthToken.js";
 
 export default async function (event) {
 	// CHECK IF AUTH HEADER IS PROVIDED

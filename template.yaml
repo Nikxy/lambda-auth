@@ -37,7 +37,7 @@ Parameters:
     MaxLength: 255
   LocalStack:
     Type: String
-    Description: The localstack endpoint, leave empty for deployment.
+    Description: The localstack endpoint, set false for deployment.
     Default: "false"
     MinLength: 1
     MaxLength: 255

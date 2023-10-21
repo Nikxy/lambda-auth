@@ -110,7 +110,6 @@ Resources:
                   - dynamodb:PutItem
                   - dynamodb:UpdateItem
                 Resource: !GetAtt DynamoDBTable.Arn
-      
 
   Lambda:
     Type: AWS::Lambda::Function
@@ -411,3 +410,7 @@ Outputs:
   ServiceURL:
     Description: The url to access the service
     Value: !Sub "https://${Domain}/"
+
+  AuthorizerUri:
+    Description: Authorizer uri for use in api gateways
+    Value: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Lambda.Arn}/invocations"

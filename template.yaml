@@ -423,8 +423,3 @@ Outputs:
     Value: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Lambda.Arn}/invocations"
     Export:
       Name: !Sub "${AWS::StackName}-authorizer-uri"
-  AuthorizerRole:
-    Description: Authorizer role for use in api gateways
-    Value: !GetAtt LambdaRole.Arn
-    Export:
-      Name: !Sub "${AWS::StackName}-authorizer-role"

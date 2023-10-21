@@ -4,6 +4,8 @@ import routeLogin from './routes/login.js';
 import routeStatus from './routes/status.js';
 import routeRefresh from './routes/refresh.js';
 
+import authorizer from './authorizer.js';
+
 // Check if all env variables are set
 if (process.env.DB_TABLE == undefined) {
 	console.error("env DB_TABLE not set");
@@ -20,6 +22,9 @@ if (process.env.REGION == undefined) {
 
 // Create Lambda Handler
 const handler = async (event) => {
+	if(event.type && event.type == "TOKEN"){
+		return await authorizer(event);
+	}
 	if(event.httpMethod == "OPTIONS")
 		return response.OK();
 	switch (event.resource){
@@ -29,6 +34,8 @@ const handler = async (event) => {
 			return await routeStatus(event);
 		case "/refresh":
 			return await routeRefresh(event);
+		case "/auth":
+			return response.OK("Hello Auth World!");
 		default:
 			return response.BadRequest("Invalid Request");
 	}

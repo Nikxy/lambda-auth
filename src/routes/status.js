@@ -1,12 +1,20 @@
 import response from "#utils/response.js";
 import getSecret from "#utils/getSecret.js";
 import jwt from "#utils/jwt.js";
+import loadAuthToken from "#utils/loadAuthToken";
 
 export default async function (event) {
+	// CHECK IF AUTH HEADER IS PROVIDED
+	if (!event.headers["Authorization"])
+	throw new Error("Please provide a jwt authorization token");
+
+	// GET TOKEN FROM AUTH HEADER
+	let jwtData = event.headers["Authorization"];
+
 	// Init data from request
 	let tokenData;
 	try {
-		tokenData = initData(event.headers);
+		tokenData = loadAuthToken(jwtData);
 	} catch (e) {
 		return response.Unauthorized(e.message);
 	}
@@ -38,25 +46,4 @@ export default async function (event) {
     let expired = remainingSeconds > 0 ? "Active for " : "Expired ";
 
 	return response.OK({ ...jwtStatus, expiryString: expired+remainingTime });
-}
-
-function initData(headers) {
-	// CHECK IF AUTH HEADER IS PROVIDED
-	if (!headers["Authorization"])
-		throw new Error("Please provide a jwt authorization token");
-
-	// GET TOKEN FROM AUTH HEADER
-	let jwtData = headers["Authorization"];
-
-	// CHECK IF TOKEN IS WITH BEARER PREFIX AND REMOVE IT
-	const splitAuthHeader = jwtData.split(" ");
-	if (splitAuthHeader.length == 2 && splitAuthHeader[0] == "Bearer")
-		jwtData = splitAuthHeader[1];
-
-	const jwtSplit = jwtData.split(".");
-	try {
-		return { ...JSON.parse(atob(jwtSplit[1])), jwt: jwtData };
-	} catch (error) {
-		throw new Error("Invalid token");
-	}
 }

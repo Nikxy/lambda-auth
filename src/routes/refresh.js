@@ -1,7 +1,8 @@
+import jwt from "#utils/jwt.js";
 import response from "#utils/response.js";
 import getSecret from "#utils/getSecret.js";
 import repository from "#utils/authRepository.js";
-import jwt from "#utils/jwt.js";
+import getParameterCaseInsensitive from "#utils/getParameterCaseInsensitive.js";
 
 // REFRESH TOKEN
 export default async function (event) {
@@ -83,7 +84,7 @@ export default async function (event) {
 }
 
 function initData(headers) {
-	let jwtData = headers[process.env.AUTH_HEADER];
+	let jwtData = getParameterCaseInsensitive(headers, process.env.AUTH_HEADER);
 	// CHECK IF AUTH HEADER IS PROVIDED
 	if (!jwtData)
 		throw new Error("Please provide a jwt authorization token");

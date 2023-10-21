@@ -1,10 +1,11 @@
+import jwt from "#utils/jwt.js";
 import response from "#utils/response.js";
 import getSecret from "#utils/getSecret.js";
-import jwt from "#utils/jwt.js";
 import loadAuthToken from "#utils/loadAuthToken.js";
+import getParameterCaseInsensitive from "#utils/getParameterCaseInsensitive.js";
 
 export default async function (event) {
-	const jwtData = event.headers[process.env.AUTH_HEADER];
+	const jwtData = getParameterCaseInsensitive(event.headers,process.env.AUTH_HEADER);
 	// CHECK IF AUTH HEADER IS PROVIDED
 	if (!jwtData)
 		return response.Unauthorized("Please provide a jwt authorization token");

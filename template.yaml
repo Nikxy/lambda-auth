@@ -362,8 +362,8 @@ Resources:
     Type: AWS::ApiGateway::Authorizer
     Properties:
       Name: !Sub "${AWS::StackName}-api-authorizer"
-      AuthorizerCredentials: !GetAtt LambdaRole.Arn
       AuthorizerUri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Lambda.Arn}/invocations"
+      AuthorizerResultTtlInSeconds: 10
       Type: TOKEN
       IdentitySource: !Sub "method.request.header.${AuthorizationHeader}"
       RestApiId: !Ref ApiGateway

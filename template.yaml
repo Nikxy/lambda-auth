@@ -322,6 +322,46 @@ Resources:
           ResponseModels:
             application/json: Error
 
+  ApiAuthResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref ApiGateway
+      ParentId: !GetAtt ApiGateway.RootResourceId
+      PathPart: auth
+  
+  AuthGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId:
+        Ref: ApiGateway
+      ResourceId:
+        Ref: ApiAuthResource
+      HttpMethod: GET
+      ApiKeyRequired: false
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref ApiAuthorizer
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Lambda.Arn}/invocations"
+      MethodResponses:
+        - StatusCode: 200
+          ResponseModels:
+            application/json: Empty
+        - StatusCode: 400
+          ResponseModels:
+            application/json: Error
+
+  ApiAuthorizer:
+    Type: AWS::ApiGateway::Authorizer
+    Properties:
+      Name: !Sub "${AWS::StackName}-api-authorizer"
+      AuthorizerCredentials: !GetAtt LambdaRole.Arn
+      AuthorizerUri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Lambda.Arn}/invocations"
+      Type: TOKEN
+      IdentitySource: method.request.header.Authorization
+      RestApiId: !Ref ApiGateway
+      AuthType: custom
 
   ApiGatewayDeployment:
     Type: AWS::ApiGateway::Deployment
@@ -332,6 +372,7 @@ Resources:
       - RefreshOptions
       - StatusGet
       - StatusOptions
+      - AuthGet
     Properties:
       Description: API Deployment for the auth service
       RestApiId: !Ref ApiGateway

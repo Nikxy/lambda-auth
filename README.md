@@ -17,3 +17,6 @@ Simple Auth Service running on Lambda with SecretsManager and DynamoDB
 1. Create stack using the AWS Console or CLI, populating the parameters.
     * AWS SAM uses already set parameters values from the stack when deploying.
 2. Deploying using AWS `sam deploy` or setup a Jenkins pipeline.
+
+### TODO
+* Update code to use more non relational data structure in dynamodb instead of current relational approach
